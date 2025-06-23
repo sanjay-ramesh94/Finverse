@@ -5,14 +5,13 @@ import { UserContext } from "../context/UserContext";
 export default function Navbar() {
   const { user, setUser } = useContext(UserContext);
   const navigate = useNavigate();
-  const location = useLocation(); // to detect current path
+  const location = useLocation();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     setUser(null);
     navigate("/");
   };
-<button onClick={() => navigate("/history")}>History</button>
 
   const isActive = (path) => location.pathname === path;
 
@@ -22,7 +21,7 @@ export default function Navbar() {
         Finverse
       </div>
       {user && (
-        <ul className="flex space-x-6 text-sm font-medium">
+        <ul className="flex space-x-6 text-sm font-medium items-center">
           <li>
             <Link
               to="/home"
@@ -71,7 +70,30 @@ export default function Navbar() {
               Goals
             </Link>
           </li>
-          <Link to="/investment" className="hover:text-teal-400">Investment</Link>
+          <li>
+            <Link
+              to="/investment"
+              className={`pb-1 transition-all ${
+                isActive("/investment")
+                  ? "border-b-2 border-yellow-400 text-yellow-300"
+                  : "hover:text-yellow-400"
+              }`}
+            >
+              Investment
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/calculator"
+              className={`pb-1 transition-all ${
+                isActive("/calculator")
+                  ? "border-b-2 border-yellow-400 text-yellow-300"
+                  : "hover:text-yellow-400"
+              }`}
+            >
+              Calculator
+            </Link>
+          </li>
           <li>
             <button
               onClick={handleLogout}
@@ -80,8 +102,6 @@ export default function Navbar() {
               Logout
             </button>
           </li>
-          
-
         </ul>
       )}
     </nav>
