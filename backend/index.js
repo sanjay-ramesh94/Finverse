@@ -185,6 +185,18 @@ app.put("/api/goals/:goalId/add", async (req, res) => {
 });
 
 // --- TRANSACTION ROUTES ---
+app.get("/api/transactions/investments/:userId", async (req, res) => {
+  try {
+    const investments = await Transaction.find({
+      userId: req.params.userId,
+      isInvestment: true,
+    }).sort({ createdAt: -1 });
+
+    res.json(investments);
+  } catch (err) {
+    res.status(500).json({ msg: "Server error" });
+  }
+});
 
 const investCats = ["mutual fund", "gold", "silver", "stocks"];
 
