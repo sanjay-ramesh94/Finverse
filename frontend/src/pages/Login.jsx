@@ -16,25 +16,29 @@ export default function Login() {
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
- const handleLogin = async (e) => {
-  e.preventDefault();
-  try {
-    const res = await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`,
-      form,
-      { timeout: 5000 }
-    );
-
-    if (res.data?.msg === "OTP sent") {
-      alert("✅ OTP sent to your email");
-      setStep(2);
-    } else {
-      alert("⚠️ Unexpected response: " + JSON.stringify(res.data));
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    console.log("handleLogin called with form:", form);
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`,
+        form,
+        { timeout: 5000 }
+      );
+      console.log("Login response:", res.data);
+      if (res.data?.msg === "OTP sent to email") {
+        console.log("Switching to OTP step");
+        alert("OTP sent to your email");
+        setStep(2);
+      } else {
+        console.error("Unexpected response:", res.data); // This is line ~34
+        alert("Unexpected response from server: " + JSON.stringify(res.data));
+      }
+    } catch (err) {
+      console.error("Login error:", err.message, err.response?.data);
+      alert(err.response?.data?.msg || "Login failed");
     }
-  } catch (err) {
-    alert(err.response?.data?.msg || "Login failed");
-  }
-};
+  };
 
   const handleVerifyOtp = async (e) => {
     e.preventDefault();

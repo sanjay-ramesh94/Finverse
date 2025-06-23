@@ -1,105 +1,91 @@
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+// src/components/Insights.jsx
+import React, { useContext, useEffect, useState } from "react";
+import { UserContext } from "../context/UserContext";
+import axios from "axios";
 
-export default function Insights({ transactions = [] }) {
-  const [insights, setInsights] = useState([]);
+export default function Insights() {
+  const { user } = useContext(UserContext);
+  const [insights, setInsights] = useState({
+    topCategories: [],
+    savingsPercent: 0,
+    m2mGrowth: 0,
+  });
 
   useEffect(() => {
-    const categories = {};
-    const monthly = {};
-    let incomeTotal = 0;
-    let expenseTotal = 0;
+    if (!user?._id) return;
 
-    transactions.forEach((tx) => {
-      const month = tx.date.slice(0, 7);
-      if (!monthly[month]) monthly[month] = { income: 0, expense: 0 };
+    (async () => {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/transactions/user/${user._id}`);
+      const tx = res.data;
+      const now = new Date();
+      const thisMonth = now.toISOString().slice(0, 7);
+      const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const lastMonth = lastMonthDate.toISOString().slice(0, 7);
 
-      if (tx.type === "income") {
-        incomeTotal += tx.amount;
-        monthly[month].income += tx.amount;
-      } else if (tx.type === "expense") {
-        expenseTotal += tx.amount;
-        monthly[month].expense += tx.amount;
-        categories[tx.category] = (categories[tx.category] || 0) + tx.amount;
-      }
-    });
+      const txThis = tx.filter(t => t.date.startsWith(thisMonth) && t.type === 'expense');
+      const txLast = tx.filter(t => t.date.startsWith(lastMonth) && t.type === 'expense');
+      const totalIncome = tx
+        .filter(t => t.date.startsWith(thisMonth) && t.type === 'income')
+        .reduce((a, b) => a + b.amount, 0);
+      const totalExpense = txThis.reduce((a, b) => a + b.amount, 0);
+      const lastExpense = txLast.reduce((a, b) => a + b.amount, 0);
 
-    const topCategories = Object.entries(categories)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 3);
+      const topCats = Object.entries(
+        txThis.reduce((acc, t) => {
+          if (t.category) acc[t.category] = (acc[t.category] || 0) + t.amount;
+          return acc;
+        }, {})
+      )
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3);
 
-    const insightList = [];
+      const savingsPercent = totalIncome > 0
+        ? ((totalIncome - totalExpense) / totalIncome) * 100
+        : 0;
 
-    if (incomeTotal || expenseTotal) {
-      const savingsPct = ((incomeTotal - expenseTotal) / incomeTotal) * 100;
-      insightList.push(`💰 You saved ${savingsPct.toFixed(1)}% of your income this month.`);
-    }
+      const m2mGrowth = lastExpense === 0
+        ? totalExpense > 0 ? 100 : 0
+        : ((totalExpense - lastExpense) / lastExpense) * 100;
 
-    if (topCategories.length) {
-      const top = topCategories[0];
-      insightList.push(`🔝 Highest spending: ${top[0]} - ₹${top[1].toFixed(0)}`);
-    }
-
-    const months = Object.keys(monthly).sort();
-    if (months.length >= 2) {
-      const current = months[months.length - 1];
-      const prev = months[months.length - 2];
-      const diff = monthly[current].expense - monthly[prev].expense;
-      const changePct = (diff / monthly[prev].expense) * 100;
-
-      if (!isNaN(changePct)) {
-        insightList.push(
-          changePct > 0
-            ? `📈 Expenses increased by ${changePct.toFixed(1)}% compared to last month.`
-            : `📉 Expenses decreased by ${Math.abs(changePct).toFixed(1)}% from last month.`
-        );
-      }
-
-      // AI-style: Specific category growth
-      const categoryGrowth = {};
-      transactions.forEach((tx) => {
-        const month = tx.date.slice(0, 7);
-        if (tx.type === "expense") {
-          if (!categoryGrowth[tx.category]) categoryGrowth[tx.category] = {};
-          if (!categoryGrowth[tx.category][month]) categoryGrowth[tx.category][month] = 0;
-          categoryGrowth[tx.category][month] += tx.amount;
-        }
+      setInsights({
+        topCategories: topCats,
+        savingsPercent: savingsPercent.toFixed(1),
+        m2mGrowth: m2mGrowth.toFixed(1),
       });
-
-      for (let cat in categoryGrowth) {
-        const catData = categoryGrowth[cat];
-        if (catData[prev] && catData[current]) {
-          const diff = catData[current] - catData[prev];
-          const pct = (diff / catData[prev]) * 100;
-          if (Math.abs(pct) >= 20) {
-            insightList.push(
-              pct > 0
-                ? `⚠️ You're spending ${pct.toFixed(1)}% more on ${cat} than last month.`
-                : `✅ You've cut down ${cat} expenses by ${Math.abs(pct).toFixed(1)}%!`
-            );
-          }
-        }
-      }
-    }
-
-    setInsights(insightList);
-  }, [transactions]);
+    })();
+  }, [user]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="bg-zinc-800 rounded-lg p-6 shadow-lg border border-zinc-700"
-    >
-      <h2 className="text-2xl font-bold text-teal-400 mb-4">🔍 Smart Insights</h2>
-      <ul className="space-y-2 text-sm text-gray-300">
-        {insights.length > 0 ? (
-          insights.map((msg, i) => <li key={i}>• {msg}</li>)
-        ) : (
-          <li>Analyzing data...</li>
-        )}
-      </ul>
-    </motion.div>
+    <div className="bg-white/10 backdrop-blur-lg p-6 rounded-xl text-white grid sm:grid-cols-3 gap-6">
+      {/* Top categories */}
+      <div>
+        <h4 className="font-semibold mb-2">Top Spending</h4>
+        <ul className="space-y-1">
+          {insights.topCategories.length === 0 && <li>—</li>}
+          {insights.topCategories.map(([cat, amt]) => (
+            <li key={cat} className="flex justify-between">
+              <span>{cat}</span>
+              <span>₹ {amt.toLocaleString()}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Savings % */}
+      <div>
+        <h4 className="font-semibold mb-2">Savings This Month</h4>
+        <p className="text-4xl">{insights.savingsPercent}%</p>
+      </div>
+
+      {/* Month-over-month growth */}
+      <div>
+        <h4 className="font-semibold mb-2">Expense Trend</h4>
+        <p className={`text-4xl ${insights.m2mGrowth >= 0 ? "text-red-400" : "text-green-400"}`}>
+          {insights.m2mGrowth >= 0 ? "↑ " : "↓ "}
+          {Math.abs(insights.m2mGrowth)}%
+        </p>
+        <small className="text-gray-300">vs last month</small>
+      </div>
+    </div>
   );
 }
