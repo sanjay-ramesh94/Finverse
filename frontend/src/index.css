@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global styles */
+body {
+  @apply bg-[#0f0f0f] text-white font-sans min-h-screen;
+}
+
+a {
+  @apply text-yellow-400 hover:text-yellow-500 transition;
+}
+
+button {
+  @apply transition duration-200 focus:outline-none;
+}
