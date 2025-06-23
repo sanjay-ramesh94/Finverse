@@ -197,6 +197,17 @@ app.get("/api/transactions/investments/:userId", async (req, res) => {
     res.status(500).json({ msg: "Server error" });
   }
 });
+// -- added new if any error delete this --//
+app.get("/api/transactions/:id", async (req, res) => {
+  try {
+    const transaction = await Transaction.findById(req.params.id);
+    if (!transaction) return res.status(404).json({ msg: "Transaction not found" });
+    res.json(transaction);
+  } catch (err) {
+    res.status(500).json({ msg: "Server error" });
+  }
+});// -- until this -//
+
 
 const investCats = ["mutual fund", "gold", "silver", "stocks"];
 
