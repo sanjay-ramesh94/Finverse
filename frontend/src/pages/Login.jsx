@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+
 
 export default function Login() {
   const [step, setStep] = useState(1); // 1 = login, 2 = OTP input
@@ -26,7 +28,7 @@ export default function Login() {
         { timeout: 5000 }
       );
       console.log("Login response:", res.data);
-      if (res.data?.msg === "OTP sent to email") {
+      if (res.data?.msg === "OTP sent") {
         console.log("Switching to OTP step");
         alert("OTP sent to your email");
         setStep(2);
@@ -127,9 +129,9 @@ export default function Login() {
 
         <p className="text-center text-sm mt-4 text-gray-400">
           Don’t have an account?{" "}
-          <a href="/signup" className="text-yellow-400 hover:underline">
-            Sign up
-          </a>
+          <Link to="/signup" className="text-yellow-400 hover:underline">
+  Sign up
+</Link>
         </p>
       </motion.div>
     </div>

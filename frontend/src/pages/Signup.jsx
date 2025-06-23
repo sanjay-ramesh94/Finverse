@@ -3,6 +3,8 @@ import axios from "axios";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion"; // ✅ Framer Motion
+import { Link } from "react-router-dom";
+
 
 export default function Signup() {
   const { setUser } = useContext(UserContext);
@@ -90,9 +92,10 @@ export default function Signup() {
         {/* 🔗 Login Link */}
         <p className="text-center text-sm mt-4 text-gray-400">
           Already have an account?{" "}
-          <a href="/" className="text-yellow-400 hover:underline">
-            Login
-          </a>
+         <Link to="/" className="text-yellow-400 hover:underline">
+  Login
+</Link>
+
         </p>
       </motion.div>
     </div>
