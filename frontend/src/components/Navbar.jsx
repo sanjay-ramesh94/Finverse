@@ -84,9 +84,9 @@ export default function Navbar() {
           </li>
           <li>
             <Link
-              to="/calculator"
+              to="/calculators"
               className={`pb-1 transition-all ${
-                isActive("/calculator")
+                isActive("/calculators")
                   ? "border-b-2 border-yellow-400 text-yellow-300"
                   : "hover:text-yellow-400"
               }`}
