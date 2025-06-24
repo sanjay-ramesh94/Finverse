@@ -184,6 +184,22 @@ app.put("/api/goals/:goalId/add", async (req, res) => {
   }
 });
 
+//-- settings--//
+app.put("/api/user/:id", async (req, res) => {
+  try {
+    const updated = await User.findByIdAndUpdate(
+      req.params.id,
+      { username: req.body.username },
+      { new: true }
+    );
+    res.json(updated);
+  } catch (err) {
+    console.error("User update error:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
+});
+
+
 // --- TRANSACTION ROUTES ---
 app.get("/api/transactions/investments/:userId", async (req, res) => {
   try {
