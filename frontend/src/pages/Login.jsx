@@ -25,7 +25,7 @@ export default function Login() {
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`,
         form,
-        { timeout: 5000 }
+        
       );
       console.log("Login response:", res.data);
       if (res.data?.msg === "OTP sent") {
