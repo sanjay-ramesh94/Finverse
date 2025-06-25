@@ -19,6 +19,10 @@ import EditTransaction from "./pages/EditTransaction";
 //-- new added setings--//
 import Settings from "./pages/Settings";
 import ForgotPassword from "./pages/ForgotPassword";
+import ReceiptScanner from './components/ReceiptScanner';
+
+
+
 
 // Components
 import Navbar from "./components/Navbar";
@@ -47,7 +51,7 @@ function App() {
         {/*new added settngs route*/}
         <Route path="/settings" element={<Settings />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-
+<Route path="/scan-receipt" element={<ReceiptScanner />} />
 
         {/* Calculators main page */}
         <Route path="/calculators" element={<Calculator />} />
