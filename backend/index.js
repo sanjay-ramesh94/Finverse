@@ -487,6 +487,43 @@ app.post("/api/auth/verify-otp", async (req, res) => {
     res.status(500).json({ msg: "Server error" });
   }
 });
+// Step 1: Send OTP
+app.post("/api/auth/forgot-password", async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(404).json({ msg: "User not found" });
+
+  const otp = Math.floor(100000 + Math.random() * 900000);
+  otpStore[email] = { otp, expires: Date.now() + 5 * 60 * 1000 };
+
+  await transporter.sendMail({
+    from: '"Finverse" <no-reply@finverse.com>',
+    to: email,
+    subject: "Reset Your Password - OTP",
+    text: `Your OTP to reset password is ${otp}`,
+  });
+
+  res.json({ msg: "OTP sent" });
+});
+
+// Step 2: Verify OTP & Reset Password
+app.post("/api/auth/reset-password", async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+  const stored = otpStore[email];
+  if (!stored || stored.otp != otp || Date.now() > stored.expires)
+    return res.status(400).json({ msg: "Invalid or expired OTP" });
+
+  delete otpStore[email];
+
+  const user = await User.findOne({ email });
+  if (!user) return res.status(404).json({ msg: "User not found" });
+
+  user.password = await bcrypt.hash(newPassword, 10);
+  await user.save();
+
+  res.json({ msg: "Password reset successfully" });
+});
+
 
 // =======================
 //        GOALS
