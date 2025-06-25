@@ -342,6 +342,7 @@ app.use(express.json());
 // ✅ CORS: Allow both localhost (dev) and Vercel (prod)
 const allowedOrigins = [
   "http://localhost:5173",
+  "http://localhost:3000", // added for pwa
   "https://finverse-ft6q.vercel.app"
 ];
 
