@@ -18,6 +18,7 @@ import SWPCalculator from "./pages/SWPCalculator";
 import EditTransaction from "./pages/EditTransaction";
 //-- new added setings--//
 import Settings from "./pages/Settings";
+import ForgotPassword from "./pages/ForgotPassword";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -45,6 +46,7 @@ function App() {
         <Route path="/calculators/iphone" element={<IPhoneAffordability/>} />
         {/*new added settngs route*/}
         <Route path="/settings" element={<Settings />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
 
         {/* Calculators main page */}
