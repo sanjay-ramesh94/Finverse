@@ -1,23 +1,27 @@
 import { useState, useContext } from "react";
 import axios from "axios";
 import { UserContext } from "../context/UserContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom"; // ✅ Combined import
 
 export default function AddTransaction() {
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
+  const location = useLocation(); // ✅ Hook call inside component
+  const prefill = location.state || {}; // ✅ Now defined before use
 
   const [type, setType] = useState("expense");
   const [image, setImage] = useState(null);
 
   const [form, setForm] = useState({
-    date: new Date().toISOString().slice(0, 10),
-    amount: "",
-    category: "",
+    date: prefill.date || new Date().toISOString().slice(0, 10),
+    amount: prefill.amount || "",
+    category: prefill.category || "",
     account: "",
-    note: "",
+    note: prefill.notes || "",
     description: "",
   });
+
+ 
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
