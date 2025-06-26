@@ -226,25 +226,25 @@ export default function Navbar() {
 
   const isActive = (path) => location.pathname === path;
 
+  // ✅ Add Calculator link here
   const navLinks = [
     { label: "Dashboard", path: "/home" },
     { label: "Add", path: "/add" },
     { label: "History", path: "/history" },
     { label: "Goals", path: "/goals" },
     { label: "Investment", path: "/investment" },
+    { label: "Calculator", path: "/calculators" },
     { label: "Settings", path: "/settings" },
-    { label: "Scan Receipt", path: "/scan-receipt" }, // ✅ Added this
+    { label: "Scan Receipt", path: "/scan-receipt" },
   ];
 
   return (
     <nav className="bg-zinc-900 text-white px-6 py-4 shadow-md">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        {/* Logo */}
         <div className="text-xl font-bold tracking-wide text-yellow-400">
           Finverse
         </div>
 
-        {/* Hamburger Menu for Mobile */}
         {user && (
           <button
             className="md:hidden text-white text-2xl"
@@ -254,7 +254,6 @@ export default function Navbar() {
           </button>
         )}
 
-        {/* Desktop Menu */}
         {user && (
           <ul className="hidden md:flex space-x-6 text-sm font-medium">
             {navLinks.map((link) => (
@@ -283,7 +282,6 @@ export default function Navbar() {
         )}
       </div>
 
-      {/* Mobile Menu */}
       {menuOpen && user && (
         <ul className="md:hidden mt-4 space-y-3 text-sm font-medium bg-zinc-800 px-4 py-4 rounded-lg shadow">
           {navLinks.map((link) => (
@@ -317,5 +315,3 @@ export default function Navbar() {
     </nav>
   );
 }
-
-
