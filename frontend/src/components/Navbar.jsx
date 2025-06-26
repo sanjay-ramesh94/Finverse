@@ -234,7 +234,7 @@ export default function Navbar() {
     { label: "Goals", path: "/goals" },
     { label: "Investment", path: "/investment" },
     { label: "Calculator", path: "/calculators" },
-    { label: "Calendar", path: "/calendar" }, // ✅ NEWLY ADDED
+    
     { label: "Settings", path: "/settings" },
     { label: "Scan Receipt", path: "/scan-receipt" },
   ];
