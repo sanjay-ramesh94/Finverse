@@ -21,7 +21,7 @@ import Settings from "./pages/Settings";
 import ForgotPassword from "./pages/ForgotPassword";
 import ReceiptScanner from './components/ReceiptScanner';
 
-
+import TransactionCalendar from "./pages/TransactionCalendar";
 
 
 
@@ -54,6 +54,8 @@ function App() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 <Route path="/scan-receipt" element={<ReceiptScanner />} />
+        <Route path="/calendar" element={<TransactionCalendar />} />
+        
 
         {/* Calculators main page */}
         <Route path="/calculators" element={<Calculator />} />
