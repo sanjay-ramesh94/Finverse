@@ -226,7 +226,7 @@ export default function Navbar() {
 
   const isActive = (path) => location.pathname === path;
 
-  // ✅ Add Calculator link here
+  // ✅ Added Calendar link here
   const navLinks = [
     { label: "Dashboard", path: "/home" },
     { label: "Add", path: "/add" },
@@ -234,6 +234,7 @@ export default function Navbar() {
     { label: "Goals", path: "/goals" },
     { label: "Investment", path: "/investment" },
     { label: "Calculator", path: "/calculators" },
+    { label: "Calendar", path: "/calendar" }, // ✅ NEWLY ADDED
     { label: "Settings", path: "/settings" },
     { label: "Scan Receipt", path: "/scan-receipt" },
   ];
@@ -282,6 +283,7 @@ export default function Navbar() {
         )}
       </div>
 
+      {/* Mobile Menu */}
       {menuOpen && user && (
         <ul className="md:hidden mt-4 space-y-3 text-sm font-medium bg-zinc-800 px-4 py-4 rounded-lg shadow">
           {navLinks.map((link) => (
