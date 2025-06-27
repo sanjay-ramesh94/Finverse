@@ -70,14 +70,16 @@ export default function Investment() {
         theme === "dark" ? "bg-black text-white" : "bg-gray-100 text-gray-900"
       }`}
     >
-      <div
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
         className={`max-w-5xl mx-auto p-6 rounded-xl shadow-2xl transition duration-300 backdrop-blur-md bg-opacity-20 ${
           theme === "dark"
             ? "bg-zinc-900/60 border border-zinc-700"
             : "bg-white/80 border border-gray-300"
         }`}
       >
-        {/* 🌗 Theme Toggle */}
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-bold text-teal-400 text-center w-full">
             Investment Portfolio
@@ -96,7 +98,12 @@ export default function Investment() {
 
         {chartData.length > 0 ? (
           <>
-            <div className="h-72">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="h-72"
+            >
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -119,32 +126,54 @@ export default function Investment() {
                   <Legend />
                 </PieChart>
               </ResponsiveContainer>
-            </div>
+            </motion.div>
 
-            <div
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
               className={`text-xl text-center mt-4 font-semibold ${
                 theme === "dark" ? "text-green-400" : "text-green-600"
               }`}
             >
               Total Invested: ₹{totalInvested.toLocaleString("en-IN")}
-            </div>
+            </motion.div>
           </>
         ) : (
-          <p
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             className={`text-center mt-10 text-lg font-medium ${
               theme === "dark" ? "text-gray-400" : "text-gray-600"
             }`}
           >
             No investments found.
-          </p>
+          </motion.p>
         )}
 
-        {/* 🧾 Investment Cards */}
         {investments.length > 0 && (
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: {
+                  delayChildren: 0.2,
+                  staggerChildren: 0.1,
+                },
+              },
+            }}
+            className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          >
             {investments.map((tx) => (
               <motion.div
                 key={tx._id}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 },
+                }}
                 whileHover={{ scale: 1.03 }}
                 className={`p-4 rounded-lg shadow-lg transform transition-all duration-300 ${
                   theme === "dark"
@@ -169,9 +198,9 @@ export default function Investment() {
                 </p>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
