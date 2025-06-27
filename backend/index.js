@@ -510,6 +510,23 @@ app.post("/api/auth/signup", async (req, res) => {
     res.status(500).json({ msg: "Server error" });
   }
 });
+// google login//
+// ✅ Google Login
+app.post("/api/auth/google-login", async (req, res) => {
+  const { email, username, googleId } = req.body;
+
+  let user = await User.findOne({ email });
+  if (!user) {
+    user = new User({ email, username, password: googleId });
+    await user.save();
+  }
+
+  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+  res.json({
+    token,
+    user: { _id: user._id, username: user.username, email: user.email },
+  });
+});
 
 // 🔑 Login → OTP
 app.post("/api/auth/login", async (req, res) => {
@@ -771,4 +788,5 @@ mongoose.connect(process.env.MONGO_URI)
     );
   })
   .catch(err => console.error("❌ MongoDB connection failed:", err));
+
 
