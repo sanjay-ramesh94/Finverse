@@ -417,6 +417,33 @@ app.post("/api/auth/login-no-otp", async (req, res) => {
     res.status(500).json({ msg: "Server error" });
   }
 });
+const authMiddleware = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ msg: "No token provided" });
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.userId = decoded.id;
+    next();
+  } catch (err) {
+    return res.status(401).json({ msg: "Invalid token" });
+  }
+};
+
+app.get("/api/auth/me", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) return res.status(404).json({ msg: "User not found" });
+
+    res.json({
+      _id: user._id,
+      username: user.username,
+      email: user.email
+    });
+  } catch (err) {
+    res.status(500).json({ msg: "Server error" });
+  }
+});
 
 // otp for sign up//
 // Step 1: Send OTP for signup
