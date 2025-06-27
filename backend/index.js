@@ -325,7 +325,6 @@ mongoose.connect(process.env.MONGO_URI)
     );
   })
   .catch(err => console.error("❌ MongoDB connection failed:", err));*/
-
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -364,9 +363,11 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // 🔧 Mongo Models
 const userSchema = new mongoose.Schema({
   username: String,
+  mobile: String,
   email: { type: String, unique: true },
   password: String,
 });
+
 const User = mongoose.model("User", userSchema);
 
 const goalSchema = new mongoose.Schema({
@@ -391,6 +392,73 @@ const transactionSchema = new mongoose.Schema({
   image: String,
 }, { timestamps: true });
 const Transaction = mongoose.model("Transaction", transactionSchema);
+
+// login with no otp//
+app.post("/api/auth/login-no-otp", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(400).json({ msg: "Invalid email or password" });
+    }
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    res.json({
+      token,
+      user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+    });
+  } catch (err) {
+    console.error("Login-no-otp error:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
+});
+
+// otp for sign up//
+// Step 1: Send OTP for signup
+app.post("/api/auth/send-otp", async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ msg: "Email is required" });
+
+  const otp = Math.floor(100000 + Math.random() * 900000);
+  otpStore[email] = { otp, expires: Date.now() + 5 * 60 * 1000 };
+
+  await transporter.sendMail({
+    from: '"Finverse" <no-reply@finverse.com>',
+    to: email,
+    subject: "Verify your email - OTP",
+    text: `Your OTP for Finverse signup is ${otp}`,
+  });
+
+  res.json({ msg: "OTP sent" });
+});
+
+
+// Step 2: Verify OTP and complete registration
+app.post("/api/auth/verify-otp-signup", async (req, res) => {
+  const { email, password, otp } = req.body;
+  const stored = otpStore[email];
+  if (!stored || stored.otp != otp || Date.now() > stored.expires)
+    return res.status(400).json({ msg: "Invalid or expired OTP" });
+
+  delete otpStore[email];
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const user = new User({
+    username: stored.username,
+    mobile: stored.mobile,
+    email,
+    password: hashedPassword,
+  });
+  await user.save();
+
+  res.json({ msg: "Signup complete" });
+});
+
 
 // 🛠 Multer (uploads)
 const storage = multer.diskStorage({
