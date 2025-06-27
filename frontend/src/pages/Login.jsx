@@ -1,9 +1,10 @@
 import { useState, useContext } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode"; // ✅ Correct import
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -16,16 +17,39 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-    const res = await axios.post(
-  `${import.meta.env.VITE_BACKEND_URL}/api/auth/login-no-otp`,
-  form
-);
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/login-no-otp`,
+        form
+      );
       localStorage.setItem("token", res.data.token);
       setUser(res.data.user);
       navigate("/home");
     } catch (err) {
       console.error("Login error:", err);
       alert(err?.response?.data?.msg || "Login failed");
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const decoded = jwtDecode(credentialResponse.credential); // ✅ use jwtDecode
+      const { email, name, sub: googleId } = decoded;
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/google-login`,
+        {
+          email,
+          username: name,
+          googleId,
+        }
+      );
+
+      localStorage.setItem("token", res.data.token);
+      setUser(res.data.user);
+      navigate("/home");
+    } catch (err) {
+      console.error("Google login error:", err);
+      alert("Google login failed");
     }
   };
 
@@ -74,13 +98,20 @@ export default function Login() {
         </form>
 
         <p
-          className="text-center text-sm mt-2 text-yellow-400 hover:underline cursor-pointer"
+          className="text-center text-sm mt-3 text-yellow-400 hover:underline cursor-pointer"
           onClick={() => navigate("/forgot-password")}
         >
           Forgot Password?
         </p>
 
-        <p className="text-center text-sm mt-4 text-gray-400">
+        <div className="mt-6 flex items-center justify-center">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => alert("Google login failed")}
+          />
+        </div>
+
+        <p className="text-center text-sm mt-6 text-gray-400">
           Don’t have an account?{" "}
           <Link to="/signup" className="text-yellow-400 hover:underline">
             Sign up
