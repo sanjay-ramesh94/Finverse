@@ -2,11 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../context/UserContext";
-
-// Framer Motion
 import { motion } from "framer-motion";
-
-// Heroicons
 import {
   HomeIcon,
   ChartBarIcon,
@@ -16,15 +12,12 @@ import {
   PlusIcon,
   CalculatorIcon
 } from "@heroicons/react/outline";
-
-// Dashboard sections
 import SummaryCards from "../components/SummaryCards";
 import Charts from "../components/Charts";
 import RecentTransactions from "../components/RecentTransactions";
 import GoalsProgress from "../components/GoalsProgress";
 import Insights from "../components/Insights";
 
-// 🧠 Animation configs
 const containerVariants = {
   hidden: { opacity: 0, x: 50 },
   visible: { opacity: 1, x: 0, transition: { staggerChildren: 0.2 } }
@@ -37,17 +30,21 @@ const cardVariants = {
 export default function Home() {
   const { user, setUser } = useContext(UserContext);
   const navigate = useNavigate();
-
   const [transactions, setTransactions] = useState([]);
   const [goals, setGoals] = useState([]);
 
-  // 🛑 Redirect if not logged in
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 18) return "Good afternoon";
+    return "Good evening";
+  };
+
   useEffect(() => {
     if (!user) return navigate("/", { replace: true });
     fetchData();
   }, [user]);
 
-  // 📤 Fetch transactions + goals
   const fetchData = async () => {
     try {
       const [txRes, goalsRes] = await Promise.all([
@@ -61,7 +58,6 @@ export default function Home() {
     }
   };
 
-  // 🔔 Notification Permission
   useEffect(() => {
     if ("Notification" in window) {
       Notification.requestPermission().then(permission => {
@@ -74,57 +70,48 @@ export default function Home() {
     }
   }, []);
 
-  // 🔔 Show Reminder
-  const showReminderNotification = () => {
-    if (Notification.permission === "granted") {
-      new Notification("💰 Don’t forget!", {
-        body: "Log your expenses today before midnight!",
-        icon: "/icon.png" // Optional icon
-      });
-    }
-  };
-
-  // ⏰ Schedule Notification Daily at 9 PM
   useEffect(() => {
     const now = new Date();
     const target = new Date();
-    target.setHours(21, 0, 0, 0); // 9 PM today
+    target.setHours(21, 0, 0, 0);
 
     let delay = target.getTime() - now.getTime();
-    if (delay < 0) delay += 24 * 60 * 60 * 1000; // Schedule for tomorrow if passed
+    if (delay < 0) delay += 24 * 60 * 60 * 1000;
 
     const timeout = setTimeout(() => {
-      showReminderNotification();
+      if (Notification.permission === "granted") {
+        new Notification("💰 Don’t forget!", {
+          body: "Log your expenses today before midnight!",
+          icon: "/icon.png"
+        });
+      }
     }, delay);
 
     return () => clearTimeout(timeout);
   }, []);
 
-  // 📊 Calculations
-  const income = transactions
-    .filter((t) => t.type === "income")
-    .reduce((s, t) => s + t.amount, 0);
-  const expense = transactions
-    .filter((t) => t.type === "expense")
-    .reduce((s, t) => s + t.amount, 0);
+  const income = transactions.filter(t => t.type === "income").reduce((s, t) => s + t.amount, 0);
+  const expense = transactions.filter(t => t.type === "expense").reduce((s, t) => s + t.amount, 0);
   const savings = income - expense;
 
   const categoryTotals = {};
-  transactions.forEach((tx) => {
+  transactions.forEach(tx => {
     if (tx.type === "expense") {
       categoryTotals[tx.category] = (categoryTotals[tx.category] || 0) + tx.amount;
     }
   });
   const pieData = {
     labels: Object.keys(categoryTotals),
-    datasets: [{
-      data: Object.values(categoryTotals),
-      backgroundColor: ["#ef4444", "#3b82f6", "#22c55e", "#eab308", "#8b5cf6"]
-    }]
+    datasets: [
+      {
+        data: Object.values(categoryTotals),
+        backgroundColor: ["#ef4444", "#3b82f6", "#22c55e", "#eab308", "#8b5cf6"]
+      }
+    ]
   };
 
   const monthlyInc = {}, monthlyExp = {};
-  transactions.forEach((tx) => {
+  transactions.forEach(tx => {
     const m = tx.date.slice(0, 7);
     if (tx.type === "income") monthlyInc[m] = (monthlyInc[m] || 0) + tx.amount;
     else if (tx.type === "expense") monthlyExp[m] = (monthlyExp[m] || 0) + tx.amount;
@@ -138,50 +125,43 @@ export default function Home() {
     ]
   };
 
-  // 🚪 Logout
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    setUser(null);
-    navigate("/", { replace: true });
+    if (confirm("Are you sure you want to logout?")) {
+      localStorage.removeItem("token");
+      setUser(null);
+      navigate("/", { replace: true });
+    }
   };
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-black via-zinc-900 to-zinc-800 text-white">
-      {/* 🧭 Sidebar */}
       <nav className="fixed top-0 left-0 h-full w-60 bg-zinc-900 p-6 hidden md:flex flex-col space-y-6">
         <h1 className="text-2xl font-bold text-teal-400 flex items-center space-x-2">
           <ChartBarIcon className="h-6 w-6" /> Finverse
         </h1>
-        <Link to="/" className="flex items-center space-x-2 hover:text-teal-300">
-          <HomeIcon className="h-5 w-5" />
-          <span>Dashboard</span>
+        <Link to="/" className="flex items-center space-x-2 hover:scale-105 transition">
+          <HomeIcon className="h-5 w-5" /> <span>Dashboard</span>
         </Link>
-        <Link to="/add" className="flex items-center space-x-2 hover:text-teal-300">
-          <PlusIcon className="h-5 w-5" />
-          <span>Add Transaction</span>
+        <Link to="/add" className="flex items-center space-x-2 hover:scale-105 transition">
+          <PlusIcon className="h-5 w-5" /> <span>Add Transaction</span>
         </Link>
-        <Link to="/history" className="flex items-center space-x-2 hover:text-teal-300">
-          <TrendingUpIcon className="h-5 w-5" />
-          <span>History</span>
+        <Link to="/history" className="flex items-center space-x-2 hover:scale-105 transition">
+          <TrendingUpIcon className="h-5 w-5" /> <span>History</span>
         </Link>
-        <Link to="/calculators" className="flex items-center space-x-2 hover:text-teal-300">
-          <CalculatorIcon className="h-5 w-5" />
-          <span>Calculator</span>
+        <Link to="/calculators" className="flex items-center space-x-2 hover:scale-105 transition">
+          <CalculatorIcon className="h-5 w-5" /> <span>Calculator</span>
         </Link>
-        <Link to="/goals" className="flex items-center space-x-2 hover:text-teal-300">
-          <CashIcon className="h-5 w-5" />
-          <span>Goals</span>
+        <Link to="/goals" className="flex items-center space-x-2 hover:scale-105 transition">
+          <CashIcon className="h-5 w-5" /> <span>Goals</span>
         </Link>
         <button
           onClick={handleLogout}
           className="mt-auto flex items-center space-x-2 text-red-500 hover:text-red-400"
         >
-          <LogoutIcon className="h-5 w-5" />
-          <span>Logout</span>
+          <LogoutIcon className="h-5 w-5" /> <span>Logout</span>
         </button>
       </nav>
 
-      {/* 📊 Main Dashboard */}
       <main className="flex-1 p-6 md:ml-60 overflow-auto">
         <motion.div
           className="space-y-10"
@@ -191,7 +171,7 @@ export default function Home() {
         >
           <motion.div variants={cardVariants} className="flex justify-between items-center flex-wrap gap-4">
             <h2 className="text-3xl font-bold text-teal-400">
-              📊 Welcome, {user.username}!
+              📊 {getGreeting()}, {user.username}!
             </h2>
             <button
               onClick={handleLogout}
