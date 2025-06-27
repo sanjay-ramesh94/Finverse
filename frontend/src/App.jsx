@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "./context/UserContext";
 
@@ -16,55 +16,57 @@ import CarAffordabilityCalculator from "./pages/CarAffordabilityCalculator";
 import IPhoneAffordability from "./pages/IPhoneAffordability";
 import SWPCalculator from "./pages/SWPCalculator";
 import EditTransaction from "./pages/EditTransaction";
-//-- new added setings--//
 import Settings from "./pages/Settings";
 import ForgotPassword from "./pages/ForgotPassword";
-import ReceiptScanner from './components/ReceiptScanner';
-
-
-
-
-
+import ReceiptScanner from "./components/ReceiptScanner";
 
 // Components
 import Navbar from "./components/Navbar";
 
+// 🔒 Private route component
+function PrivateRoute({ children }) {
+  const { user, loadingUser } = useContext(UserContext);
+
+  if (loadingUser) return null; // ⏳ Don't render anything while checking login
+
+  return user ? children : <Navigate to="/" replace />;
+}
+
 function App() {
-  const { user } = useContext(UserContext);
+  const { user, loadingUser } = useContext(UserContext);
+
+  if (loadingUser) return null; // Prevents flashing nav/routes before auth check
 
   return (
     <BrowserRouter>
-      {/* Show navbar only when user is logged in */}
+      {/* ✅ Show navbar only when user is logged in */}
       {user && <Navbar />}
 
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         {/* Protected routes */}
-        <Route path="/home" element={<Home />} />
-        <Route path="/add" element={<AddTransaction />} />
-        <Route path="/history" element={<TransactionHistory />} />
-        <Route path="/investment" element={<Investment />} />
-        <Route path="/goals" element={<Goals />} />
-        <Route path="/calculators/car" element={<CarAffordabilityCalculator />} />
-        <Route path="/calculators/iphone" element={<IPhoneAffordability/>} />
-        {/*new added settngs route*/}
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-<Route path="/scan-receipt" element={<ReceiptScanner />} />
-      
-        
+        <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
+        <Route path="/add" element={<PrivateRoute><AddTransaction /></PrivateRoute>} />
+        <Route path="/history" element={<PrivateRoute><TransactionHistory /></PrivateRoute>} />
+        <Route path="/investment" element={<PrivateRoute><Investment /></PrivateRoute>} />
+        <Route path="/goals" element={<PrivateRoute><Goals /></PrivateRoute>} />
+        <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
+        <Route path="/scan-receipt" element={<PrivateRoute><ReceiptScanner /></PrivateRoute>} />
+        <Route path="/edit/:id" element={<PrivateRoute><EditTransaction /></PrivateRoute>} />
 
-        {/* Calculators main page */}
-        <Route path="/calculators" element={<Calculator />} />
-<Route path="/calculators/swp" element={<SWPCalculator />} />
+        {/* Calculators */}
+        <Route path="/calculators" element={<PrivateRoute><Calculator /></PrivateRoute>} />
+        <Route path="/calculators/sip" element={<PrivateRoute><SIPCalculator /></PrivateRoute>} />
+        <Route path="/calculators/swp" element={<PrivateRoute><SWPCalculator /></PrivateRoute>} />
+        <Route path="/calculators/car" element={<PrivateRoute><CarAffordabilityCalculator /></PrivateRoute>} />
+        <Route path="/calculators/iphone" element={<PrivateRoute><IPhoneAffordability /></PrivateRoute>} />
 
-        {/* Calculator sub-pages */}
-        <Route path="/calculators/sip" element={<SIPCalculator />} />
-       
-        <Route path="/edit/:id" element={<EditTransaction />} />
+        {/* Catch-all unknown routes */}
+        <Route path="*" element={<Navigate to={user ? "/home" : "/"} replace />} />
       </Routes>
     </BrowserRouter>
   );
