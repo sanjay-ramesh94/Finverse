@@ -1,13 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import { UserProvider } from './context/UserContext';  // ✅ make sure this is the correct path
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { UserProvider } from './context/UserContext';  
 import './index.css';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
   <React.StrictMode>
-    <UserProvider>
-      <App />
-    </UserProvider>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <UserProvider>
+        <App />
+      </UserProvider>
+    </GoogleOAuthProvider>
   </React.StrictMode>
 );
