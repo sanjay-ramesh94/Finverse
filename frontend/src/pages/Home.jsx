@@ -93,13 +93,13 @@ export default function Home() {
   const income = transactions.filter(t => t.type === "income").reduce((s, t) => s + t.amount, 0);
   const expense = transactions.filter(t => t.type === "expense").reduce((s, t) => s + t.amount, 0);
   const savings = income - expense;
-
   const categoryTotals = {};
-  transactions.forEach(tx => {
-    if (tx.type === "expense") {
-      categoryTotals[tx.category] = (categoryTotals[tx.category] || 0) + tx.amount;
-    }
-  });
+transactions.forEach(tx => {
+  if (tx.type === "expense") {
+    const cat = tx.category?.trim().toLowerCase(); // ✅ Normalize
+    categoryTotals[cat] = (categoryTotals[cat] || 0) + tx.amount;
+  }
+});
   const pieData = {
     labels: Object.keys(categoryTotals),
     datasets: [
