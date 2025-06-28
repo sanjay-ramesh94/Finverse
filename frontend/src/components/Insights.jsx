@@ -1,4 +1,3 @@
-// src/components/Insights.jsx
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import axios from "axios";
@@ -11,6 +10,11 @@ export default function Insights() {
     m2mGrowth: 0,
   });
 
+  const formatMonth = (dateStr) => {
+    const d = new Date(dateStr);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  };
+
   useEffect(() => {
     if (!user?._id) return;
 
@@ -18,21 +22,21 @@ export default function Insights() {
       const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/transactions/user/${user._id}`);
       const tx = res.data;
       const now = new Date();
-      const thisMonth = now.toISOString().slice(0, 7);
-      const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-      const lastMonth = lastMonthDate.toISOString().slice(0, 7);
+      const thisMonth = formatMonth(now);
+      const lastMonth = formatMonth(new Date(now.getFullYear(), now.getMonth() - 1, 1));
 
-      const txThis = tx.filter(t => t.date.startsWith(thisMonth) && t.type === 'expense');
-      const txLast = tx.filter(t => t.date.startsWith(lastMonth) && t.type === 'expense');
+      const txThis = tx.filter(t => formatMonth(t.date) === thisMonth && t.type === 'expense');
+      const txLast = tx.filter(t => formatMonth(t.date) === lastMonth && t.type === 'expense');
       const totalIncome = tx
-        .filter(t => t.date.startsWith(thisMonth) && t.type === 'income')
+        .filter(t => formatMonth(t.date) === thisMonth && t.type === 'income')
         .reduce((a, b) => a + b.amount, 0);
       const totalExpense = txThis.reduce((a, b) => a + b.amount, 0);
       const lastExpense = txLast.reduce((a, b) => a + b.amount, 0);
 
       const topCats = Object.entries(
         txThis.reduce((acc, t) => {
-          if (t.category) acc[t.category] = (acc[t.category] || 0) + t.amount;
+          const key = t.category?.trim().toLowerCase();
+          if (key) acc[key] = (acc[key] || 0) + t.amount;
           return acc;
         }, {})
       )
