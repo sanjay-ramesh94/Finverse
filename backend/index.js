@@ -765,6 +765,26 @@ app.post("/api/auth/reset-password", async (req, res) => {
   res.json({ msg: "Password reset successfully" });
 });
 
+//Change password in settings //
+app.post("/api/auth/change-password", async (req, res) => {
+  const { userId, currentPassword, newPassword } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ msg: "User not found" });
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) return res.status(400).json({ msg: "Current password is incorrect" });
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+
+    res.json({ msg: "Password changed successfully" });
+  } catch (err) {
+    console.error("Change password error:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
+});
 
 // =======================
 //        GOALS
