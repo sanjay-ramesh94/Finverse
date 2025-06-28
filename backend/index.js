@@ -423,7 +423,8 @@ app.post("/api/auth/login-no-otp", async (req, res) => {
     }
 
     // Get IP address
-    const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+    let rawIp = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+const ip = rawIp?.split(",")[0]?.trim(); // 👈 This extracts only the first public IP
 
     // 🌐 Fetch city from IP using ipapi.co
     let city = "Unknown";
