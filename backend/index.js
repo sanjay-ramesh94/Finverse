@@ -326,10 +326,6 @@ mongoose.connect(process.env.MONGO_URI)
   })
   .catch(err => console.error("❌ MongoDB connection failed:", err));*/
 
-
-
-
-
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -407,7 +403,6 @@ const transactionSchema = new mongoose.Schema({
 }, { timestamps: true });
 const Transaction = mongoose.model("Transaction", transactionSchema);
 
-// login with no otp//
 const useragent = require("express-useragent");
 app.use(useragent.express());
 
@@ -422,23 +417,28 @@ app.post("/api/auth/login-no-otp", async (req, res) => {
       return res.status(400).json({ msg: "Invalid email or password" });
     }
 
-    // Get IP address
-    let rawIp = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-const ip = rawIp?.split(",")[0]?.trim(); // 👈 This extracts only the first public IP
+    // ✅ Get first public IP
+    const rawIp = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+    const ip = rawIp?.split(",").find(ip =>
+      !ip.includes("127.") &&
+      !ip.includes("::") &&
+      !ip.startsWith("10.") &&
+      !ip.startsWith("192.168.")
+    )?.trim() || "103.196.28.182"; // fallback test IP
 
-    // 🌐 Fetch city from IP using ipapi.co
+    // ✅ Fetch City from IP
     let city = "Unknown";
     try {
       const locRes = await axios.get(`https://ipapi.co/${ip}/json/`);
       city = locRes.data.city || "Unknown";
     } catch (err) {
-      console.warn("City fetch failed:", err.message);
+      console.warn("🌐 City fetch failed:", err.message);
     }
 
-    // Device from User-Agent
+    // ✅ Get device info from User-Agent
     const device = req.headers["user-agent"];
 
-    // Save login history
+    // ✅ Push login entry (and limit to last 20)
     user.logins.push({
       ip,
       device,
@@ -446,9 +446,16 @@ const ip = rawIp?.split(",")[0]?.trim(); // 👈 This extracts only the first pu
       city
     });
 
+    // Keep only latest 20 logins
+    if (user.logins.length > 20) {
+      user.logins = user.logins.slice(-20);
+    }
+
     await user.save();
 
+    // ✅ Generate JWT token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+
     res.json({
       token,
       user: {
@@ -458,10 +465,11 @@ const ip = rawIp?.split(",")[0]?.trim(); // 👈 This extracts only the first pu
       },
     });
   } catch (err) {
-    console.error("Login-no-otp error:", err);
+    console.error("❌ Login-no-otp error:", err);
     res.status(500).json({ msg: "Server error" });
   }
 });
+
 
 //login history 
 app.get("/api/user/:id/logins", async (req, res) => {
@@ -606,23 +614,74 @@ app.post("/api/auth/signup", async (req, res) => {
     res.status(500).json({ msg: "Server error" });
   }
 });
-// google login//
+
+
 // ✅ Google Login
 app.post("/api/auth/google-login", async (req, res) => {
   const { email, username, googleId } = req.body;
 
-  let user = await User.findOne({ email });
-  if (!user) {
-    user = new User({ email, username, password: googleId });
-    await user.save();
-  }
+  try {
+    let user = await User.findOne({ email });
 
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-  res.json({
-    token,
-    user: { _id: user._id, username: user.username, email: user.email },
-  });
+    if (!user) {
+      user = new User({
+        email,
+        username,
+        password: googleId, // using Google ID as placeholder password
+      });
+    }
+
+    // ✅ Get public IP
+    const rawIp = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+    const ip = rawIp?.split(",").find(ip =>
+      !ip.includes("127.") &&
+      !ip.includes("::") &&
+      !ip.startsWith("10.") &&
+      !ip.startsWith("192.168.")
+    )?.trim() || "103.196.28.182"; // fallback IP for dev/testing
+
+    // ✅ Get city from IP
+    let city = "Unknown";
+    try {
+      const locRes = await axios.get(`https://ipapi.co/${ip}/json/`);
+      city = locRes.data.city || "Unknown";
+    } catch (err) {
+      console.warn("🌐 City fetch failed:", err.message);
+    }
+
+    // ✅ Get device info
+    const device = req.headers["user-agent"];
+
+    // ✅ Add login entry and limit to last 20
+    user.logins = user.logins || [];
+    user.logins.push({
+      ip,
+      device,
+      city,
+      timestamp: new Date()
+    });
+
+    if (user.logins.length > 20) {
+      user.logins = user.logins.slice(-20);
+    }
+
+    await user.save();
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    res.json({
+      token,
+      user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+    });
+  } catch (err) {
+    console.error("❌ Google login error:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
 });
+
 
 // 🔑 Login → OTP
 app.post("/api/auth/login", async (req, res) => {
@@ -884,5 +943,4 @@ mongoose.connect(process.env.MONGO_URI)
     );
   })
   .catch(err => console.error("❌ MongoDB connection failed:", err));
-
 
