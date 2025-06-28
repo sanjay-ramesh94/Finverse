@@ -19,6 +19,8 @@ import EditTransaction from "./pages/EditTransaction";
 import Settings from "./pages/Settings";
 import ForgotPassword from "./pages/ForgotPassword";
 import ReceiptScanner from "./components/ReceiptScanner";
+import LoginHistory from "./pages/LoginHistory";
+
 
 // Components
 import Navbar from "./components/Navbar";
@@ -57,6 +59,8 @@ function App() {
         <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
         <Route path="/scan-receipt" element={<PrivateRoute><ReceiptScanner /></PrivateRoute>} />
         <Route path="/edit/:id" element={<PrivateRoute><EditTransaction /></PrivateRoute>} />
+        <Route path="/login-history" element={<PrivateRoute><LoginHistory /></PrivateRoute>} />
+
 
         {/* Calculators */}
         <Route path="/calculators" element={<PrivateRoute><Calculator /></PrivateRoute>} />
