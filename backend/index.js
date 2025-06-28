@@ -325,6 +325,11 @@ mongoose.connect(process.env.MONGO_URI)
     );
   })
   .catch(err => console.error("❌ MongoDB connection failed:", err));*/
+
+
+
+
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -366,6 +371,15 @@ const userSchema = new mongoose.Schema({
   mobile: String,
   email: { type: String, unique: true },
   password: String,
+
+  // 👇 Login history tracking
+ logins: [{
+  ip: String,
+  device: String,
+  city: String,
+  timestamp: { type: Date, default: Date.now }
+}]
+
 });
 
 const User = mongoose.model("User", userSchema);
@@ -394,6 +408,11 @@ const transactionSchema = new mongoose.Schema({
 const Transaction = mongoose.model("Transaction", transactionSchema);
 
 // login with no otp//
+const useragent = require("express-useragent");
+app.use(useragent.express());
+
+const axios = require("axios");
+
 app.post("/api/auth/login-no-otp", async (req, res) => {
   const { email, password } = req.body;
 
@@ -402,6 +421,31 @@ app.post("/api/auth/login-no-otp", async (req, res) => {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(400).json({ msg: "Invalid email or password" });
     }
+
+    // Get IP address
+    const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+
+    // 🌐 Fetch city from IP using ipapi.co
+    let city = "Unknown";
+    try {
+      const locRes = await axios.get(`https://ipapi.co/${ip}/json/`);
+      city = locRes.data.city || "Unknown";
+    } catch (err) {
+      console.warn("City fetch failed:", err.message);
+    }
+
+    // Device from User-Agent
+    const device = req.headers["user-agent"];
+
+    // Save login history
+    user.logins.push({
+      ip,
+      device,
+      timestamp: new Date(),
+      city
+    });
+
+    await user.save();
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
     res.json({
@@ -417,6 +461,30 @@ app.post("/api/auth/login-no-otp", async (req, res) => {
     res.status(500).json({ msg: "Server error" });
   }
 });
+
+//login history 
+app.get("/api/user/:id/logins", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ msg: "User not found" });
+
+    res.json(user.logins || []);
+  } catch (err) {
+    res.status(500).json({ msg: "Server error" });
+  }
+});
+app.get("/api/user/:id/logins", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ msg: "User not found" });
+    res.json(user.logins || []);
+  } catch (err) {
+    console.error("Login history fetch error:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
+});
+
+// Add this after your login routes
 const authMiddleware = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.status(401).json({ msg: "No token provided" });
