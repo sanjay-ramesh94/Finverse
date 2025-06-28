@@ -2,11 +2,15 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function RecentTransactions({ transactions }) {
+  const recent = [...transactions]
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // ✅ Ensure latest first
+    .slice(0, 5); // ✅ Top 5 recent ones
+
   return (
     <div className="bg-zinc-800 p-4 rounded shadow-md">
-      <h3 className="mb-4 font-semibold">🕒 Recent Transactions</h3>
+      <h3 className="mb-4 font-semibold text-yellow-400">🕒 Recent Transactions</h3>
       <AnimatePresence>
-        {transactions.slice(-5).reverse().map((tx) => (
+        {recent.map((tx) => (
           <motion.div
             key={tx._id}
             className="flex justify-between py-2 border-b border-zinc-700"
