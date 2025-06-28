@@ -1,10 +1,12 @@
 import { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../context/UserContext";
 
 export default function Settings() {
   const { user, setUser } = useContext(UserContext);
   const [username, setUsername] = useState(user?.username || "");
+  const navigate = useNavigate();
 
   const handleUpdate = async () => {
     try {
@@ -16,6 +18,8 @@ export default function Settings() {
       alert("Failed to update username.");
     }
   };
+
+  const goToLoginHistory = () => navigate("/login-history");
 
   return (
     <div className="p-6 max-w-lg mx-auto text-white bg-zinc-800 rounded-lg shadow-md mt-10">
@@ -34,6 +38,16 @@ export default function Settings() {
         >
           Save Changes
         </button>
+
+        <div className="mt-6">
+          <h3 className="font-semibold text-lg mb-2">Security</h3>
+          <button
+            onClick={goToLoginHistory}
+            className="w-full bg-zinc-700 hover:bg-zinc-600 text-white px-4 py-2 rounded transition"
+          >
+            View Login History
+          </button>
+        </div>
       </div>
     </div>
   );
