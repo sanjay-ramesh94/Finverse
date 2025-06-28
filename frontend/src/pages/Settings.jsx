@@ -1,54 +1,73 @@
-import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
+import { motion } from "framer-motion";
 
 export default function Settings() {
-  const { user, setUser } = useContext(UserContext);
-  const [username, setUsername] = useState(user?.username || "");
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
-  const handleUpdate = async () => {
-    try {
-      const res = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/user/${user._id}`, { username });
-      setUser(res.data);
-      alert("Username updated successfully!");
-    } catch (err) {
-      console.error("Update error:", err);
-      alert("Failed to update username.");
-    }
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
   };
 
-  const goToLoginHistory = () => navigate("/login-history");
-
   return (
-    <div className="p-6 max-w-lg mx-auto text-white bg-zinc-800 rounded-lg shadow-md mt-10">
-      <h2 className="text-2xl font-bold mb-4 text-yellow-400">Settings</h2>
-      <div className="space-y-4">
-        <label className="block text-sm">Username</label>
-        <input
-          type="text"
-          className="w-full px-4 py-2 bg-zinc-700 text-white rounded"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <button
-          className="bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-500"
-          onClick={handleUpdate}
-        >
-          Save Changes
-        </button>
+    <motion.div
+      className="p-6 max-w-lg mx-auto text-white bg-zinc-800 rounded-lg shadow-lg mt-10"
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+    >
+      <motion.h2
+        className="text-2xl font-bold mb-6 text-yellow-400"
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.2 }}
+      >
+        ⚙️ Settings
+      </motion.h2>
 
-        <div className="mt-6">
-          <h3 className="font-semibold text-lg mb-2">Security</h3>
-          <button
-            onClick={goToLoginHistory}
-            className="w-full bg-zinc-700 hover:bg-zinc-600 text-white px-4 py-2 rounded transition"
+      <div className="divide-y divide-zinc-700">
+        {/* Username Section */}
+        <motion.div
+          variants={sectionVariants}
+          initial="hidden"
+          animate="visible"
+          className="py-4 flex justify-between items-center cursor-pointer hover:bg-zinc-700 px-3 rounded transition-all"
+          onClick={() => navigate("/edit-username")}
+        >
+          <span className="text-lg">✏️ Edit Username</span>
+          <span className="text-gray-400 text-sm">{user?.username}</span>
+        </motion.div>
+
+        {/* Security Section */}
+        <motion.div
+          variants={sectionVariants}
+          initial="hidden"
+          animate="visible"
+          transition={{ delay: 0.3 }}
+          className="py-4 px-2"
+        >
+          <h3 className="text-xs text-gray-400 mb-2 uppercase tracking-widest">Security</h3>
+
+          <div
+            className="flex justify-between items-center cursor-pointer hover:bg-zinc-700 p-3 rounded transition-all"
+            onClick={() => navigate("/change-password")}
           >
-            View Login History
-          </button>
-        </div>
+            <span className="text-sm">🔑 Change Password</span>
+            <span className="text-gray-400 text-sm">&gt;</span>
+          </div>
+
+          <div
+            className="flex justify-between items-center cursor-pointer hover:bg-zinc-700 p-3 rounded transition-all"
+            onClick={() => navigate("/devices")}
+          >
+            <span className="text-sm">💻 Devices & Login History</span>
+            <span className="text-gray-400 text-sm">&gt;</span>
+          </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }
