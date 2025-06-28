@@ -20,6 +20,8 @@ import Settings from "./pages/Settings";
 import ForgotPassword from "./pages/ForgotPassword";
 import ReceiptScanner from "./components/ReceiptScanner";
 import LoginHistory from "./pages/LoginHistory";
+import ChangePassword from "./pages/ChangePassword";
+import EditUsernamePage from "./pages/EditUsernamePage";
 
 
 // Components
@@ -60,6 +62,9 @@ function App() {
         <Route path="/scan-receipt" element={<PrivateRoute><ReceiptScanner /></PrivateRoute>} />
         <Route path="/edit/:id" element={<PrivateRoute><EditTransaction /></PrivateRoute>} />
         <Route path="/login-history" element={<PrivateRoute><LoginHistory /></PrivateRoute>} />
+        <Route path="/change-password" element={<PrivateRoute><ChangePassword /></PrivateRoute>} />
+        <Route path="/devices" element={<PrivateRoute><LoginHistory /></PrivateRoute>} />
+        <Route path="/edit-username" element={<PrivateRoute><EditUsernamePage /></PrivateRoute>} />
 
 
         {/* Calculators */}
