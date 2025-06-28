@@ -16,31 +16,36 @@ export default function LoginHistory() {
   }, [user]);
 
   return (
-    <div className="p-6 max-w-4xl mx-auto mt-10 text-white">
-      <h2 className="text-2xl font-bold mb-6 text-yellow-400">Login History</h2>
+    <div className="bg-zinc-800 text-white rounded-lg p-4 mt-6 max-w-3xl mx-auto">
+      <h2 className="text-xl font-bold mb-4 text-yellow-400">📜 Login History</h2>
       {history.length === 0 ? (
-        <p className="text-gray-400">No login history found.</p>
+        <p className="text-gray-400 text-sm">No login history available.</p>
       ) : (
-        <div className="overflow-auto">
-          <table className="w-full text-left border-collapse bg-zinc-800 rounded shadow-md">
-            <thead>
-              <tr className="bg-zinc-700 text-yellow-300">
-                <th className="p-3">IP Address</th>
-                <th className="p-3">Device</th>
-                <th className="p-3">Timestamp</th>
-              </tr>
-            </thead>
-            <tbody>
-              {history.map((log, index) => (
-                <tr key={index} className="border-t border-zinc-700">
-                  <td className="p-3">{log.ip}</td>
-                  <td className="p-3">{log.device}</td>
-                  <td className="p-3">{new Date(log.timestamp).toLocaleString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <ul className="space-y-3">
+          {history.slice().reverse().map((entry, idx) => (
+            <li key={idx} className="bg-zinc-700 p-3 rounded flex flex-col sm:flex-row justify-between">
+              <div>
+                <div className="text-sm font-semibold">
+                  {entry.device.includes("iPhone")
+                    ? "📱 iPhone"
+                    : entry.device.includes("Android")
+                    ? "📱 Android"
+                    : entry.device.includes("Windows")
+                    ? "🖥️ Windows PC"
+                    : entry.device.includes("Mac")
+                    ? "💻 Mac"
+                    : "📟 Other Device"}
+                </div>
+                <div className="text-xs text-gray-400">
+                  {entry.city || "Unknown City"} • {entry.ip || "Unknown IP"}
+                </div>
+              </div>
+              <div className="text-xs text-gray-300 mt-1 sm:mt-0">
+                {new Date(entry.timestamp).toLocaleString()}
+              </div>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );
