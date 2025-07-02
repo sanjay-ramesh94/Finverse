@@ -23,7 +23,7 @@ import LoginHistory from "./pages/LoginHistory";
 import ChangePassword from "./pages/ChangePassword";
 import EditUsernamePage from "./pages/EditUsernamePage";
 import DeleteAccountPage from "./pages/DeleteAccountPage";
-import ExportDataPage from "./pages/ExportDataPage";
+
 import BottomNavbar from "./components/BottomNavbar";
 
 
@@ -80,7 +80,8 @@ function App() {
 
         {/* OTHER ROUTES */}
         <Route path="/delete-account" element={<DeleteAccountPage />} />
-        <Route path="/export-data" element={<ExportDataPage />} />
+
+        
 
         {/* Catch-all unknown routes */}
         <Route path="*" element={<Navigate to={user ? "/home" : "/"} replace />} />
