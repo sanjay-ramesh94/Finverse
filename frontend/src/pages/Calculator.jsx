@@ -61,10 +61,7 @@ export default function Calculator() {
         ))}
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-black text-white text-center py-3 text-sm border-t border-zinc-800">
-        Help us make our calculators smarter –{" "}
-        <span className="underline cursor-pointer text-teal-400">Share your feedback</span>
-      </div>
+      
     </div>
   );
 }
