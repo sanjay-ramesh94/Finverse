@@ -18,7 +18,7 @@ export default function Settings() {
 
   return (
     <motion.div
-      className="p-6 max-w-lg mx-auto text-white bg-zinc-900 rounded-2xl shadow-2xl mt-12"
+      className="p-6 max-w-lg mx-auto text-white bg-zinc-900 rounded-2xl shadow-2xl mt-12 mb-20"
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
@@ -33,20 +33,26 @@ export default function Settings() {
       </motion.h2>
 
       <div className="space-y-6">
-        {/* Username Section */}
+        {/* Profile Section */}
         <motion.div
           custom={1}
           variants={sectionVariants}
           initial="hidden"
           animate="visible"
-          className="flex justify-between items-center bg-zinc-800 px-5 py-4 rounded-xl hover:bg-zinc-700 transition cursor-pointer"
-          onClick={() => navigate("/edit-username")}
+          className="space-y-4"
         >
-          <div>
-            <p className="text-base font-medium">✏️ Edit Username</p>
-            <p className="text-sm text-gray-400">{user?.username}</p>
+          <h3 className="text-xs text-gray-400 uppercase tracking-widest">Profile</h3>
+
+          <div
+            className="flex justify-between items-center bg-zinc-800 px-5 py-3 rounded-xl hover:bg-zinc-700 transition cursor-pointer"
+            onClick={() => navigate("/edit-username")}
+          >
+            <div>
+              <p className="text-sm font-medium">✏️ Edit Username</p>
+              <p className="text-xs text-gray-400">{user?.username}</p>
+            </div>
+            <span className="text-gray-500 text-lg">&gt;</span>
           </div>
-          <span className="text-gray-500 text-xl">&gt;</span>
         </motion.div>
 
         {/* Security Section */}
@@ -74,16 +80,43 @@ export default function Settings() {
             <span className="text-sm font-medium">💻 Devices & Login History</span>
             <span className="text-gray-500 text-lg">&gt;</span>
           </div>
+        </motion.div>
+
+        {/* Data & Control */}
+        <motion.div
+          custom={3}
+          variants={sectionVariants}
+          initial="hidden"
+          animate="visible"
+          className="space-y-4"
+        >
+          <h3 className="text-xs text-gray-400 uppercase tracking-widest">Data & Control</h3>
 
           <motion.div
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.97 }}
-            className="flex justify-between items-center bg-red-600 px-5 py-3 rounded-xl cursor-pointer mt-2 hover:bg-red-700 transition"
+            className="flex justify-between items-center bg-red-600 px-5 py-3 rounded-xl cursor-pointer hover:bg-red-700 transition"
             onClick={() => navigate("/delete-account")}
           >
             <span className="text-sm font-medium text-white">🗑️ Delete Account</span>
             <span className="text-white text-lg font-bold">&gt;</span>
           </motion.div>
+        </motion.div>
+
+        {/* About */}
+        <motion.div
+          custom={4}
+          variants={sectionVariants}
+          initial="hidden"
+          animate="visible"
+          className="space-y-4"
+        >
+          <h3 className="text-xs text-gray-400 uppercase tracking-widest">About</h3>
+
+          <div className="bg-zinc-800 px-5 py-3 rounded-xl">
+            <p className="text-sm">📱 Finverse v1.0.0</p>
+            <p className="text-xs text-gray-400 mt-1">Contact: i.sanjayramesh94@gmail.com</p>
+          </div>
         </motion.div>
       </div>
     </motion.div>
