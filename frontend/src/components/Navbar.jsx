@@ -28,10 +28,18 @@ export default function Navbar() {
     { label: "Goals", path: "/goals" },
     { label: "Investment", path: "/investment" },
     { label: "Calculator", path: "/calculators" },
-    { label: "Wealth Dashboard", path: "/wealth", isWealth: true },
+    { label: "Wealth Dashboard", path: "/wealth/portfolio", isWealth: true },
     { label: "Settings", path: "/settings" },
     { label: "Scan Receipt", path: "/scan-receipt" },
   ];
+
+  const handleWealthClick = () => {
+    setMenuOpen(false);
+    navigate("/wealth-transition");
+    setTimeout(() => {
+      navigate("/wealth/portfolio");
+    }, 800); // match with transition animation
+  };
 
   return (
     <nav className="bg-zinc-900 text-white px-6 py-4 shadow-md">
@@ -55,12 +63,9 @@ export default function Navbar() {
               <li key={link.path}>
                 {link.isWealth ? (
                   <span
-                    onClick={() => {
-                      setMenuOpen(false);
-                      navigate("/wealth-transition");
-                    }}
+                    onClick={handleWealthClick}
                     className={`cursor-pointer pb-1 transition-all ${
-                      isActive(link.path)
+                      isActive("/wealth/portfolio")
                         ? "border-b-2 border-yellow-400 text-yellow-300"
                         : "hover:text-yellow-400"
                     }`}
@@ -100,12 +105,9 @@ export default function Navbar() {
             <li key={link.path}>
               {link.isWealth ? (
                 <span
-                  onClick={() => {
-                    setMenuOpen(false);
-                    navigate("/wealth-transition");
-                  }}
+                  onClick={handleWealthClick}
                   className={`block pb-1 cursor-pointer ${
-                    isActive(link.path)
+                    isActive("/wealth/portfolio")
                       ? "text-yellow-300 border-b border-yellow-400"
                       : "hover:text-yellow-400"
                   }`}

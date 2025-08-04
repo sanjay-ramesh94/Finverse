@@ -24,7 +24,7 @@ export default function WealthNavbar() {
         <div className="flex items-center space-x-4">
           <div
             className="text-lg font-semibold tracking-wide text-yellow-400 cursor-pointer"
-            onClick={() => navigate("/")}
+            
           >
             Finverse Wealth
           </div>
