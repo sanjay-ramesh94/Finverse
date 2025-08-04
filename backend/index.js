@@ -10,6 +10,7 @@ const path = require("path");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 
+
 const app = express();
 app.use(express.json());
 
@@ -502,6 +503,16 @@ app.delete("/api/goals/:id", async (req, res) => {
   }
 });
 
+//binance //
+//
+//
+const router = express.Router();
+
+router.get("/", (req, res) => {
+  res.send("Binance API is live!");
+});
+
+module.exports = router;
 // =======================
 //       SETTINGS
 // =======================
