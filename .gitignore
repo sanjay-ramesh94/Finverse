@@ -1,4 +1,22 @@
-backend/node_modules
-frontend/node_modules
+# Node modules
+backend/node_modules/
+frontend/node_modules/
+
+# Environment variables
 backend/.env
-frontend/dist
+
+# Vite build output
+frontend/dist/
+
+# System files (optional but recommended)
+.DS_Store
+Thumbs.db
+
+# Logs (optional but useful)
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# VS Code settings (optional)
+.vscode/
