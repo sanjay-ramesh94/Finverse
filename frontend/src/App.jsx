@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "./context/UserContext";
 
@@ -23,32 +23,49 @@ import LoginHistory from "./pages/LoginHistory";
 import ChangePassword from "./pages/ChangePassword";
 import EditUsernamePage from "./pages/EditUsernamePage";
 import DeleteAccountPage from "./pages/DeleteAccountPage";
+import WealthDashboard from "./pages/WealthDashboard";
+import WealthTransition from "./pages/WealthTransition";
 
-import BottomNavbar from "./components/BottomNavbar";
-
+// Wealth Subpages
+import Stocks from "./pages/StocksPage";
+import Crypto from "./pages/CryptoPage";
+import Gold from "./pages/GoldPage";
+import Silver from "./pages/SilverPage";
 
 // Components
 import Navbar from "./components/Navbar";
+import BottomNavbar from "./components/BottomNavbar";
 
-// 🔒 Private route component
+// 🔒 Private route wrapper
 function PrivateRoute({ children }) {
   const { user, loadingUser } = useContext(UserContext);
-
-  if (loadingUser) return null; // ⏳ Don't render anything while checking login
-
+  if (loadingUser) return null;
   return user ? children : <Navigate to="/" replace />;
 }
 
-function App() {
+// 🚀 Wrapper to use hooks outside of Router
+function AppWrapper() {
   const { user, loadingUser } = useContext(UserContext);
+  const location = useLocation();
 
-  if (loadingUser) return null; // Prevents flashing nav/routes before auth check
+  if (loadingUser) return null;
+
+  // ❌ Hide Navbars on Wealth Transition/Dashboard
+  const hideNavOnRoutes = [
+    "/wealth-transition",
+    "/wealth-dashboard",
+    "/wealth/portfolio",
+    "/wealth/portfolio/stocks",
+    "/wealth/portfolio/crypto",
+    "/wealth/portfolio/gold",
+    "/wealth/portfolio/silver"
+  ];
+  const hideNav = hideNavOnRoutes.includes(location.pathname);
 
   return (
-    <BrowserRouter>
-      {/* ✅ Show navbar only when user is logged in */}
-      {user && <Navbar />}
-      {user && <BottomNavbar />}
+    <>
+      {user && !hideNav && <Navbar />}
+      {user && !hideNav && <BottomNavbar />}
 
       <Routes>
         {/* Public routes */}
@@ -69,7 +86,17 @@ function App() {
         <Route path="/change-password" element={<PrivateRoute><ChangePassword /></PrivateRoute>} />
         <Route path="/devices" element={<PrivateRoute><LoginHistory /></PrivateRoute>} />
         <Route path="/edit-username" element={<PrivateRoute><EditUsernamePage /></PrivateRoute>} />
+        <Route path="/delete-account" element={<PrivateRoute><DeleteAccountPage /></PrivateRoute>} />
 
+        {/* Wealth Routes */}
+        <Route path="/wealth-transition" element={<PrivateRoute><WealthTransition /></PrivateRoute>} />
+        <Route path="/wealth-dashboard" element={<PrivateRoute><WealthDashboard /></PrivateRoute>} />
+        <Route path="/wealth/portfolio" element={<PrivateRoute><WealthDashboard /></PrivateRoute>}>
+          <Route path="stocks" element={<Stocks />} />
+          <Route path="crypto" element={<Crypto />} />
+          <Route path="gold" element={<Gold />} />
+          <Route path="silver" element={<Silver />} />
+        </Route>
 
         {/* Calculators */}
         <Route path="/calculators" element={<PrivateRoute><Calculator /></PrivateRoute>} />
@@ -78,14 +105,17 @@ function App() {
         <Route path="/calculators/car" element={<PrivateRoute><CarAffordabilityCalculator /></PrivateRoute>} />
         <Route path="/calculators/iphone" element={<PrivateRoute><IPhoneAffordability /></PrivateRoute>} />
 
-        {/* OTHER ROUTES */}
-        <Route path="/delete-account" element={<DeleteAccountPage />} />
-
-        
-
-        {/* Catch-all unknown routes */}
+        {/* Catch-all route */}
         <Route path="*" element={<Navigate to={user ? "/home" : "/"} replace />} />
       </Routes>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppWrapper />
     </BrowserRouter>
   );
 }
