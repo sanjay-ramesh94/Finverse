@@ -33,7 +33,7 @@ const WealthDashboard = () => {
           gold: 0,
           silver: 0,
           stocks: 0,
-          "mutual funds": 0,
+          "mutual fund": 0,
         };
 
         data.forEach((tx) => {

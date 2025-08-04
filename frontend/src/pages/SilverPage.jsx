@@ -10,7 +10,7 @@ const Silver = () => {
       try {
         const response = await axios.get("https://www.goldapi.io/api/XAG/INR", {
           headers: {
-            "x-access-token": "goldapi-18tkeusmdsgr9es-io", // ✅ your actual API key
+            "x-access-token": "goldapi-erymssmdww9b2c-io", // ✅ your actual API key
             "Content-Type": "application/json",
           },
         });

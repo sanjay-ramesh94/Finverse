@@ -8,7 +8,6 @@ const transactionSchema = new mongoose.Schema(
       required: true,
     },
 
-    // ✅ Flag to identify if this transaction is an investment
     isInvestment: {
       type: Boolean,
       default: false,
@@ -47,11 +46,17 @@ const transactionSchema = new mongoose.Schema(
     },
 
     image: {
-      type: String, // URL or uploaded file name
+      type: String,
+    },
+
+    // ✅ Add this field to store grams of gold purchased
+    goldGrams: {
+      type: Number,
+      default: 0,
     },
   },
   {
-    timestamps: true, // Automatically adds createdAt and updatedAt fields
+    timestamps: true,
   }
 );
 

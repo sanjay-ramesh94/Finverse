@@ -1,14 +1,15 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { UserContext } from "../context/UserContext";
-import { useNavigate, useLocation } from "react-router-dom"; // ✅ Combined import
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function AddTransaction() {
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
-  const location = useLocation(); // ✅ Hook call inside component
-  const prefill = location.state || {}; // ✅ Now defined before use
+  const location = useLocation();
+  const prefill = location.state || {};
 
+  const [goldPrice, setGoldPrice] = useState(null);
   const [type, setType] = useState("expense");
   const [image, setImage] = useState(null);
 
@@ -21,7 +22,29 @@ export default function AddTransaction() {
     description: "",
   });
 
- 
+  useEffect(() => {
+    const fetchGoldPrice = async () => {
+      // Only fetch price if the category is 'gold'
+      if (form.category.toLowerCase() === 'gold') {
+        try {
+          const response = await axios.get("https://www.goldapi.io/api/XAU/INR", {
+            headers: {
+              "x-access-token": "goldapi-erymssmdww9b2c-io", // Replace with your actual API key
+              "Content-Type": "application/json",
+            },
+          });
+          const pricePerGram = response.data.price / 31.1035;
+          setGoldPrice(pricePerGram);
+          console.log("🪙 Fetched live gold price:", pricePerGram);
+        } catch (err) {
+          console.error("❌ Failed to fetch gold price:", err);
+          alert("Could not fetch live gold price. Grams will not be calculated.");
+        }
+      }
+    };
+
+    fetchGoldPrice();
+  }, [form.category]);
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -35,6 +58,15 @@ export default function AddTransaction() {
     formData.append("type", type);
     if (image) formData.append("image", image);
 
+    // Check if it's a gold investment and if we have the price
+    if (
+      form.category.toLowerCase() === "gold" &&
+      type === "expense" &&
+      goldPrice
+    ) {
+      formData.append("liveGoldPricePerGram", goldPrice);
+    }
+
     try {
       await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/transactions`,
@@ -42,15 +74,15 @@ export default function AddTransaction() {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
       alert("✅ Transaction Saved!");
-       setForm({
-      date: new Date().toISOString().slice(0, 10),
-      amount: "",
-      category: "",
-      account: "",
-      note: "",
-      description: "",
-    });
-    setImage(null);
+      setForm({
+        date: new Date().toISOString().slice(0, 10),
+        amount: "",
+        category: "",
+        account: "",
+        note: "",
+        description: "",
+      });
+      setImage(null);
     } catch (err) {
       console.error("❌ Transaction Error:", err.response?.data || err.message);
       alert("❌ Failed to save transaction");
@@ -64,7 +96,6 @@ export default function AddTransaction() {
           Add a Transaction
         </h2>
 
-        {/* Transaction Type Tabs */}
         <div className="flex justify-center gap-3 mb-6">
           {["income", "expense", "transfer"].map((t) => (
             <button
@@ -82,7 +113,6 @@ export default function AddTransaction() {
           ))}
         </div>
 
-        {/* Form */}
         <form
           onSubmit={handleSubmit}
           className="space-y-5"
@@ -111,7 +141,7 @@ export default function AddTransaction() {
             <input
               type="text"
               name="category"
-              placeholder="Category (e.g. Food)"
+              placeholder="Category (e.g. Food, Gold)"
               value={form.category}
               onChange={handleChange}
               className="bg-zinc-800 text-white px-4 py-2 rounded-md w-full placeholder-gray-400 focus:outline-none"
@@ -144,7 +174,6 @@ export default function AddTransaction() {
             className="bg-zinc-800 text-white px-4 py-2 rounded-md w-full placeholder-gray-400 focus:outline-none"
           ></textarea>
 
-          {/* Stylish Image Upload */}
           <div className="border-2 border-dashed border-zinc-600 p-4 rounded-lg relative group bg-zinc-800">
             <label
               htmlFor="image"
@@ -189,7 +218,6 @@ export default function AddTransaction() {
             </label>
           </div>
 
-          {/* Submit Buttons */}
           <div className="flex justify-end gap-4 pt-4">
             <button
               type="button"

@@ -4,13 +4,12 @@ const multer = require("multer");
 const Transaction = require("../models/Transaction");
 const Goal = require("../models/Goal");
 
-// ✅ Categories that are considered investments
 const investmentCategories = ["mutual fund", "gold", "silver", "stocks"];
 
-// ✅ Multer storage config
+// 📦 Multer config for image upload
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "uploads/"),
-  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
+  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
 });
 const upload = multer({ storage });
 
@@ -30,6 +29,7 @@ router.post("/", upload.single("image"), async (req, res) => {
       description,
       userId,
       type,
+      liveGoldPricePerGram,
     } = req.body;
 
     if (!userId || !amount || !type) {
@@ -37,6 +37,17 @@ router.post("/", upload.single("image"), async (req, res) => {
     }
 
     const isInvestment = investmentCategories.includes((category || "").toLowerCase());
+
+    // ⚖️ Calculate goldGrams if applicable
+    let goldGrams = null;
+    if (
+      category?.toLowerCase() === "gold" &&
+      type === "expense" &&
+      isInvestment &&
+      liveGoldPricePerGram
+    ) {
+      goldGrams = (Number(amount) / Number(liveGoldPricePerGram)).toFixed(4);
+    }
 
     const transaction = new Transaction({
       date,
@@ -49,11 +60,12 @@ router.post("/", upload.single("image"), async (req, res) => {
       type,
       isInvestment,
       image: req.file ? `/uploads/${req.file.filename}` : "",
+      ...(goldGrams && { goldGrams }),
     });
 
     await transaction.save();
 
-    // 🧠 If it's a transfer and matches a goal, increment the goal
+    // 🎯 Transfer to goal handling
     if (type === "transfer") {
       const goal = await Goal.findOne({ userId, name: category });
       if (goal) {
@@ -76,10 +88,9 @@ router.post("/", upload.single("image"), async (req, res) => {
  */
 router.get("/user/:userId", async (req, res) => {
   try {
-    const transactions = await Transaction.find({
-      userId: req.params.userId,
-    }).sort({ createdAt: -1 });
-
+    const transactions = await Transaction.find({ userId: req.params.userId }).sort({
+      createdAt: -1,
+    });
     res.json(transactions);
   } catch (err) {
     console.error("❌ Error fetching transactions:", err);
@@ -118,14 +129,27 @@ router.delete("/:id", async (req, res) => {
 
 /**
  * @route   PUT /api/transactions/:id
- * @desc    Update a transaction (with or without image)
+ * @desc    Update a transaction
  */
 router.put("/:id", upload.single("image"), async (req, res) => {
   try {
-    const { category } = req.body;
+    const { category, amount, type, liveGoldPricePerGram } = req.body;
     const isInvestment = investmentCategories.includes((category || "").toLowerCase());
 
-    const updateData = { ...req.body, isInvestment };
+    const updateData = {
+      ...req.body,
+      isInvestment,
+    };
+
+    // 🔁 Recalculate gold grams if necessary
+    if (
+      category?.toLowerCase() === "gold" &&
+      type === "expense" &&
+      isInvestment &&
+      liveGoldPricePerGram
+    ) {
+      updateData.goldGrams = (Number(amount) / Number(liveGoldPricePerGram)).toFixed(4);
+    }
 
     if (req.file) {
       updateData.image = `/uploads/${req.file.filename}`;

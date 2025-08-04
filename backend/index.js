@@ -63,19 +63,26 @@ const goalSchema = new mongoose.Schema({
   current: { type: Number, default: 0 },
 }, { timestamps: true });
 const Goal = mongoose.model("Goal", goalSchema);
+const transactionSchema = new mongoose.Schema(
+  {
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    isInvestment: { type: Boolean, default: false },
+    type: { type: String, enum: ["income", "expense", "transfer"] },
+    date: String,
+    amount: Number,
+    category: String,
+    account: String,
+    note: String,
+    description: String,
+    image: String,
 
-const transactionSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  isInvestment: { type: Boolean, default: false },
-  type: { type: String, enum: ["income", "expense", "transfer"] },
-  date: String,
-  amount: Number,
-  category: String,
-  account: String,
-  note: String,
-  description: String,
-  image: String,
-}, { timestamps: true });
+    // 🪙 New fields for gold investments
+    goldGrams: { type: Number, default: 0 },               // grams bought
+    goldPriceAtPurchase: { type: Number, default: 0 },     // price per gram at purchase
+  },
+  { timestamps: true }
+);
+
 const Transaction = mongoose.model("Transaction", transactionSchema);
 
 const useragent = require("express-useragent");
@@ -196,6 +203,10 @@ app.get("/api/auth/me", authMiddleware, async (req, res) => {
     res.status(500).json({ msg: "Server error" });
   }
 });
+
+
+
+
 
 // otp for sign up//
 // Step 1: Send OTP for signup
@@ -549,23 +560,41 @@ app.put("/api/user/:id", async (req, res) => {
 //    TRANSACTIONS
 // =======================
 const investCats = ["mutual fund", "gold", "silver", "stocks"];
-
+// ✅ NEW CODE - CORRECTED
 app.post("/api/transactions", upload.single("image"), async (req, res) => {
+   console.log("✅ Received transaction data:", req.body); 
+
   try {
     const data = req.body;
     data.isInvestment = investCats.includes((data.category || "").toLowerCase());
     if (req.file) data.image = `/uploads/${req.file.filename}`;
+
+    // 👇 ADD THIS LOGIC
+    if (
+      data.isInvestment &&
+      data.category?.toLowerCase() === "gold" &&
+      data.type === "expense" &&
+      data.liveGoldPricePerGram
+    ) {
+      data.goldGrams = Number(data.amount) / Number(data.liveGoldPricePerGram);
+      data.goldPriceAtPurchase = Number(data.liveGoldPricePerGram);
+    }
+    // 👆 END OF ADDED LOGIC
 
     const tx = new Transaction(data);
     await tx.save();
 
     if (data.type === "transfer") {
       const g = await Goal.findOne({ userId: data.userId, name: data.category });
-      if (g) { g.current += Number(data.amount); await g.save(); }
+      if (g) {
+        g.current += Number(data.amount);
+        await g.save();
+      }
     }
 
     res.json(tx);
   } catch (err) {
+    console.error("❌ Transaction creation error:", err);
     res.status(500).json({ msg: "Server error" });
   }
 });
@@ -597,15 +626,33 @@ app.get("/api/transactions/:id", async (req, res) => {
     res.status(500).json({ msg: "Server error" });
   }
 });
-
+// ✅ NEW CODE - CORRECTED
 app.put("/api/transactions/:id", upload.single("image"), async (req, res) => {
   try {
     const data = req.body;
     data.isInvestment = investCats.includes((data.category || "").toLowerCase());
     if (req.file) data.image = `/uploads/${req.file.filename}`;
+
+    // 👇 ADD THIS LOGIC
+    if (
+      data.isInvestment &&
+      data.category?.toLowerCase() === "gold" &&
+      data.type === "expense" &&
+      data.liveGoldPricePerGram
+    ) {
+      data.goldGrams = Number(data.amount) / Number(data.liveGoldPricePerGram);
+      data.goldPriceAtPurchase = Number(data.liveGoldPricePerGram);
+    } else {
+      // Ensure grams are reset if the category changes from gold
+      data.goldGrams = 0;
+      data.goldPriceAtPurchase = 0;
+    }
+    // 👆 END OF ADDED LOGIC
+
     const updated = await Transaction.findByIdAndUpdate(req.params.id, data, { new: true });
     res.json(updated);
   } catch (err) {
+    console.error("❌ Transaction update error:", err);
     res.status(500).json({ msg: "Server error" });
   }
 });
