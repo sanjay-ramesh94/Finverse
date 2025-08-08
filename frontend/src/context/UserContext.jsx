@@ -6,32 +6,31 @@ export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loadingUser, setLoadingUser] = useState(true); // ⏳ Prevent flicker before checking token
+  const [loadingUser, setLoadingUser] = useState(true); // ⏳ Prevent flicker before token check
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     if (!token) {
       setLoadingUser(false);
       return;
     }
 
-    axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-      .then((res) => {
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         setUser(res.data);
-      })
-      .catch((err) => {
-        console.error("❌ Auto-login failed:", err.message);
+      } catch (err) {
+        console.error("❌ Auto-login failed:", err?.response?.data?.message || err.message);
         localStorage.removeItem("token");
         setUser(null);
-      })
-      .finally(() => {
+      } finally {
         setLoadingUser(false);
-      });
+      }
+    };
+
+    fetchUser();
   }, []);
 
   return (

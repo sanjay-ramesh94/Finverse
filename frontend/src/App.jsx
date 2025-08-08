@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "./context/UserContext";
 
 // Pages
@@ -7,7 +7,6 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import AddTransaction from "./pages/AddTransaction";
-import TransactionHistory from "./pages/TransactionHistory";
 import Investment from "./pages/Investment";
 import Goals from "./pages/Goals";
 import Calculator from "./pages/Calculator";
@@ -36,22 +35,28 @@ import Silver from "./pages/SilverPage";
 import Navbar from "./components/Navbar";
 import BottomNavbar from "./components/BottomNavbar";
 
-// 🔒 Private route wrapper
+// 🔒 Private Route Wrapper
 function PrivateRoute({ children }) {
   const { user, loadingUser } = useContext(UserContext);
   if (loadingUser) return null;
   return user ? children : <Navigate to="/" replace />;
 }
 
-// 🚀 Wrapper to use hooks outside of Router
+// 🚀 Wrapper for Routing & Navbar Handling
 function AppWrapper() {
   const { user, loadingUser } = useContext(UserContext);
   const location = useLocation();
 
+  useEffect(() => {
+    window.scrollTo(0, 0); // Ensure scroll resets on navigation
+  }, [location.pathname]);
+
   if (loadingUser) return null;
 
-  // ❌ Hide Navbars on Wealth Transition/Dashboard
   const hideNavOnRoutes = [
+    "/",
+    "/signup",
+    "/forgot-password",
     "/wealth-transition",
     "/wealth-dashboard",
     "/wealth/portfolio",
@@ -60,6 +65,7 @@ function AppWrapper() {
     "/wealth/portfolio/gold",
     "/wealth/portfolio/silver"
   ];
+
   const hideNav = hideNavOnRoutes.includes(location.pathname);
 
   return (
@@ -68,12 +74,12 @@ function AppWrapper() {
       {user && !hideNav && <BottomNavbar />}
 
       <Routes>
-        {/* Public routes */}
-        <Route path="/" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        {/* Public Routes */}
+        <Route path="/" element={user ? <Navigate to="/home" /> : <Login />} />
+        <Route path="/signup" element={user ? <Navigate to="/home" /> : <Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        {/* Protected routes */}
+        {/* Protected Routes */}
         <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
         <Route path="/add" element={<PrivateRoute><AddTransaction /></PrivateRoute>} />
         <Route path="/history" element={<PrivateRoute><TransactionHistory /></PrivateRoute>} />
@@ -105,7 +111,7 @@ function AppWrapper() {
         <Route path="/calculators/car" element={<PrivateRoute><CarAffordabilityCalculator /></PrivateRoute>} />
         <Route path="/calculators/iphone" element={<PrivateRoute><IPhoneAffordability /></PrivateRoute>} />
 
-        {/* Catch-all route */}
+        {/* Catch-All */}
         <Route path="*" element={<Navigate to={user ? "/home" : "/"} replace />} />
       </Routes>
     </>
