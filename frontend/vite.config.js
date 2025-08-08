@@ -11,8 +11,8 @@ export default defineConfig({
         name: 'Finverse',
         short_name: 'Finverse',
         description: 'Finance tracking and investment dashboard',
-        theme_color: '#2563eb',
-        background_color: '#ffffff',
+        theme_color: '#000000', // black theme for status bar/splash
+        background_color: '#FFD700', // gold background on splash screen
         display: 'standalone',
         icons: [
           {
