@@ -24,6 +24,7 @@ import EditUsernamePage from "./pages/EditUsernamePage";
 import DeleteAccountPage from "./pages/DeleteAccountPage";
 import WealthDashboard from "./pages/WealthDashboard";
 import WealthTransition from "./pages/WealthTransition";
+import TransactionHistory from "./pages/TransactionHistory"; // ✅ MISSING import
 
 // Wealth Subpages
 import Stocks from "./pages/StocksPage";
@@ -34,35 +35,31 @@ import Silver from "./pages/SilverPage";
 // Components
 import Navbar from "./components/Navbar";
 import BottomNavbar from "./components/BottomNavbar";
+import LoadingScreen from "./components/LoadingScreen"; // ✅ Show while loading
 
-// 🔒 Private Route Wrapper
+// 🔒 Private route wrapper
 function PrivateRoute({ children }) {
   const { user, loadingUser } = useContext(UserContext);
-  if (loadingUser) return null;
+  if (loadingUser) return <LoadingScreen />;
   return user ? children : <Navigate to="/" replace />;
 }
 
-// 🚀 Wrapper for Routing & Navbar Handling
+// 🚀 Main wrapper for nav + route handling
 function AppWrapper() {
   const { user, loadingUser } = useContext(UserContext);
   const location = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0); // Ensure scroll resets on navigation
+    window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  if (loadingUser) return null;
+  if (loadingUser) return <LoadingScreen />;
 
   const hideNavOnRoutes = [
-    "/",
-    "/signup",
-    "/forgot-password",
-    "/wealth-transition",
-    "/wealth-dashboard",
-    "/wealth/portfolio",
-    "/wealth/portfolio/stocks",
-    "/wealth/portfolio/crypto",
-    "/wealth/portfolio/gold",
+    "/", "/signup", "/forgot-password",
+    "/wealth-transition", "/wealth-dashboard",
+    "/wealth/portfolio", "/wealth/portfolio/stocks",
+    "/wealth/portfolio/crypto", "/wealth/portfolio/gold",
     "/wealth/portfolio/silver"
   ];
 
@@ -74,12 +71,12 @@ function AppWrapper() {
       {user && !hideNav && <BottomNavbar />}
 
       <Routes>
-        {/* Public Routes */}
+        {/* Public routes */}
         <Route path="/" element={user ? <Navigate to="/home" /> : <Login />} />
         <Route path="/signup" element={user ? <Navigate to="/home" /> : <Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        {/* Protected Routes */}
+        {/* Protected routes */}
         <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
         <Route path="/add" element={<PrivateRoute><AddTransaction /></PrivateRoute>} />
         <Route path="/history" element={<PrivateRoute><TransactionHistory /></PrivateRoute>} />
@@ -90,11 +87,10 @@ function AppWrapper() {
         <Route path="/edit/:id" element={<PrivateRoute><EditTransaction /></PrivateRoute>} />
         <Route path="/login-history" element={<PrivateRoute><LoginHistory /></PrivateRoute>} />
         <Route path="/change-password" element={<PrivateRoute><ChangePassword /></PrivateRoute>} />
-        <Route path="/devices" element={<PrivateRoute><LoginHistory /></PrivateRoute>} />
         <Route path="/edit-username" element={<PrivateRoute><EditUsernamePage /></PrivateRoute>} />
         <Route path="/delete-account" element={<PrivateRoute><DeleteAccountPage /></PrivateRoute>} />
 
-        {/* Wealth Routes */}
+        {/* Wealth */}
         <Route path="/wealth-transition" element={<PrivateRoute><WealthTransition /></PrivateRoute>} />
         <Route path="/wealth-dashboard" element={<PrivateRoute><WealthDashboard /></PrivateRoute>} />
         <Route path="/wealth/portfolio" element={<PrivateRoute><WealthDashboard /></PrivateRoute>}>
@@ -111,7 +107,7 @@ function AppWrapper() {
         <Route path="/calculators/car" element={<PrivateRoute><CarAffordabilityCalculator /></PrivateRoute>} />
         <Route path="/calculators/iphone" element={<PrivateRoute><IPhoneAffordability /></PrivateRoute>} />
 
-        {/* Catch-All */}
+        {/* Catch-all */}
         <Route path="*" element={<Navigate to={user ? "/home" : "/"} replace />} />
       </Routes>
     </>
