@@ -15,7 +15,7 @@ const Gold = () => {
       try {
         const response = await axios.get("https://www.goldapi.io/api/XAU/INR", {
           headers: {
-            "x-access-token": "goldapi-erymssmdww9b2c-io",
+            "x-access-token": import.meta.env.VITE_GOLD_API_KEY,
             "Content-Type": "application/json",
           },
         });

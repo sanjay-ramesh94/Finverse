@@ -95,7 +95,7 @@ export default function AddTransaction() {
   useEffect(() => {
     if (form.category.toLowerCase() === "gold") {
       axios.get("https://www.goldapi.io/api/XAU/INR", {
-        headers: { "x-access-token": "goldapi-erymssmdww9b2c-io", "Content-Type": "application/json" },
+        headers: { "x-access-token": import.meta.env.VITE_GOLD_API_KEY, "Content-Type": "application/json" },
       }).then(res => setGoldPrice(res.data.price / 31.1035)).catch(() => { });
     }
   }, [form.category]);
