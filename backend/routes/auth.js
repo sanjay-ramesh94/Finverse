@@ -1,71 +1,25 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
-const bcrypt = require('bcryptjs');
+const authController = require('../controllers/authController');
 const jwt = require('jsonwebtoken');
 
-// Signup
-router.post('/signup', async (req, res) => {
-  const { username, email, password } = req.body;
+// Auth middleware for internal use
+const authMiddleware = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ msg: "No token provided" });
+
   try {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ msg: "User already exists" });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({
-      username,
-      email,
-      password: hashedPassword
-    });
-
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-
-    // ✅ Include _id in response
-    res.json({
-      token,
-      user: {
-        _id: user._id,
-        username: user.username,
-        email: user.email
-      }
-    });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.userId = decoded.id;
+    next();
   } catch (err) {
-    console.error("Signup error:", err.message);
-    res.status(500).json({ msg: "Server error" });
+    return res.status(401).json({ msg: "Invalid token" });
   }
-});
+};
 
-// Login
-router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ msg: "Invalid email or password" });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ msg: "Invalid email or password" });
-    }
-
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-
-    // ✅ Include _id in response
-    res.json({
-      token,
-      user: {
-        _id: user._id,
-        username: user.username,
-        email: user.email
-      }
-    });
-  } catch (err) {
-    console.error("Login error:", err.message);
-    res.status(500).json({ msg: "Server error" });
-  }
-});
+router.post('/signup', authController.signup);
+router.post('/login-no-otp', authController.loginNoOtp);
+router.post('/google-login', authController.googleLogin);
+router.get('/me', authMiddleware, authController.getMe);
 
 module.exports = router;

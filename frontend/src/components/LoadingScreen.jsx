@@ -1,15 +1,19 @@
-import React from "react";
-import { Loader2 } from "lucide-react"; // or use any spinner icon
+import { Wallet } from "lucide-react";
 
-const LoadingScreen = () => {
+export default function LoadingScreen() {
   return (
-    <div className="h-screen w-screen flex items-center justify-center bg-white text-blue-600">
-      <div className="flex flex-col items-center gap-3">
-        <Loader2 className="animate-spin w-10 h-10" />
-        <p className="text-lg font-medium">Loading...</p>
+    <div className="min-h-screen flex items-center justify-center" style={{ background: "var(--bg)" }}>
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center animate-pulse">
+          <Wallet size={22} className="text-white" />
+        </div>
+        <div className="flex gap-1.5">
+          {[0, 1, 2].map(i => (
+            <div key={i} className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-bounce"
+              style={{ animationDelay: `${i * 0.15}s` }} />
+          ))}
+        </div>
       </div>
     </div>
   );
-};
-
-export default LoadingScreen;
+}

@@ -1,202 +1,155 @@
 import { useState, useEffect, useContext } from "react";
-import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../context/UserContext";
-import { motion } from "framer-motion";
-import {
-  HomeIcon,
-  ChartBarIcon,
-  CashIcon,
-  TrendingUpIcon,
-  LogoutIcon,
-  PlusIcon,
-  CalculatorIcon
-} from "@heroicons/react/outline";
+import { useNavigate, Link } from "react-router-dom";
 import SummaryCards from "../components/SummaryCards";
 import Charts from "../components/Charts";
 import RecentTransactions from "../components/RecentTransactions";
 import GoalsProgress from "../components/GoalsProgress";
 import Insights from "../components/Insights";
-
-const containerVariants = {
-  hidden: { opacity: 0, x: 50 },
-  visible: { opacity: 1, x: 0, transition: { staggerChildren: 0.2 } }
-};
-const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 }
-};
+import { Plus, Sparkles, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Home() {
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const [transactions, setTransactions] = useState([]);
   const [goals, setGoals] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return "Good morning";
-    if (hour < 18) return "Good afternoon";
-    return "Good evening";
-  };
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+  const today = new Date().toLocaleDateString("en-IN", { weekday: "long", month: "long", day: "numeric" });
 
   useEffect(() => {
     if (!user) return navigate("/", { replace: true });
+    const fetchData = async () => {
+      try {
+        const [txRes, goalsRes] = await Promise.all([
+          axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/transactions/user/${user._id}`),
+          axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/goals/${user._id}`)
+        ]);
+        setTransactions(txRes.data || []);
+        setGoals(goalsRes.data || []);
+      } catch (err) {
+        console.error("Dashboard fetch error:", err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchData();
   }, [user]);
 
-  const fetchData = async () => {
-    try {
-      const [txRes, goalsRes] = await Promise.all([
-        axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/transactions/user/${user._id}`),
-        axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/goals/${user._id}`)
-      ]);
-      setTransactions(txRes.data || []);
-      setGoals(goalsRes.data || []);
-    } catch (err) {
-      console.error("Dashboard fetch error:", err.message);
-    }
-  };
-
-  useEffect(() => {
-    if ("Notification" in window) {
-      Notification.requestPermission().then(permission => {
-        if (permission === "granted") {
-          console.log("🔔 Notifications allowed");
-        } else {
-          console.warn("🚫 Notifications denied");
-        }
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    const now = new Date();
-    const target = new Date();
-    target.setHours(21, 0, 0, 0);
-
-    let delay = target.getTime() - now.getTime();
-    if (delay < 0) delay += 24 * 60 * 60 * 1000;
-
-    const timeout = setTimeout(() => {
-      if (Notification.permission === "granted") {
-        new Notification("💰 Don’t forget!", {
-          body: "Log your expenses today before midnight!",
-          icon: "/icon.png"
-        });
-      }
-    }, delay);
-
-    return () => clearTimeout(timeout);
-  }, []);
-
+  // Derived metrics
   const income = transactions.filter(t => t.type === "income").reduce((s, t) => s + t.amount, 0);
   const expense = transactions.filter(t => t.type === "expense").reduce((s, t) => s + t.amount, 0);
-  const savings = income - expense;
+  const balance = income - expense;
+
+  // Category totals for chart
   const categoryTotals = {};
-transactions.forEach(tx => {
-  if (tx.type === "expense") {
-    const cat = tx.category?.trim().toLowerCase(); // ✅ Normalize
-    categoryTotals[cat] = (categoryTotals[cat] || 0) + tx.amount;
-  }
-});
-  const pieData = {
-    labels: Object.keys(categoryTotals),
-    datasets: [
-      {
-        data: Object.values(categoryTotals),
-        backgroundColor: ["#ef4444", "#3b82f6", "#22c55e", "#eab308", "#8b5cf6"]
-      }
-    ]
-  };
-
-  const monthlyInc = {}, monthlyExp = {};
   transactions.forEach(tx => {
-    const m = tx.date.slice(0, 7);
-    if (tx.type === "income") monthlyInc[m] = (monthlyInc[m] || 0) + tx.amount;
-    else if (tx.type === "expense") monthlyExp[m] = (monthlyExp[m] || 0) + tx.amount;
-  });
-  const months = Object.keys({ ...monthlyInc, ...monthlyExp }).sort();
-  const barData = {
-    labels: months,
-    datasets: [
-      { label: "Income", data: months.map(m => monthlyInc[m] || 0), backgroundColor: "#22c55e" },
-      { label: "Expense", data: months.map(m => monthlyExp[m] || 0), backgroundColor: "#ef4444" }
-    ]
-  };
-
-  const handleLogout = () => {
-    if (confirm("Are you sure you want to logout?")) {
-      localStorage.removeItem("token");
-      setUser(null);
-      navigate("/", { replace: true });
+    if (tx.type === "expense") {
+      const cat = tx.category?.trim().toLowerCase() || "other";
+      categoryTotals[cat] = (categoryTotals[cat] || 0) + tx.amount;
     }
-  };
+  });
 
-  return (
-    <div className="flex min-h-screen bg-gradient-to-br from-black via-zinc-900 to-zinc-800 text-white">
-      <nav className="fixed top-0 left-0 h-full w-60 bg-zinc-900 p-6 hidden md:flex flex-col space-y-6">
-        <h1 className="text-2xl font-bold text-teal-400 flex items-center space-x-2">
-          <ChartBarIcon className="h-6 w-6" /> Finverse
-        </h1>
-        <Link to="/" className="flex items-center space-x-2 hover:scale-105 transition">
-          <HomeIcon className="h-5 w-5" /> <span>Dashboard</span>
-        </Link>
-        <Link to="/add" className="flex items-center space-x-2 hover:scale-105 transition">
-          <PlusIcon className="h-5 w-5" /> <span>Add Transaction</span>
-        </Link>
-        <Link to="/history" className="flex items-center space-x-2 hover:scale-105 transition">
-          <TrendingUpIcon className="h-5 w-5" /> <span>History</span>
-        </Link>
-        <Link to="/calculators" className="flex items-center space-x-2 hover:scale-105 transition">
-          <CalculatorIcon className="h-5 w-5" /> <span>Calculator</span>
-        </Link>
-        <Link to="/goals" className="flex items-center space-x-2 hover:scale-105 transition">
-          <CashIcon className="h-5 w-5" /> <span>Goals</span>
-        </Link>
-        <button
-          onClick={handleLogout}
-          className="mt-auto flex items-center space-x-2 text-red-500 hover:text-red-400"
-        >
-          <LogoutIcon className="h-5 w-5" /> <span>Logout</span>
-        </button>
-      </nav>
+  // Monthly data for area chart
+  const monthlyMap = {};
+  transactions.forEach(tx => {
+    if (!tx.date) return;
+    const m = tx.date.slice(0, 7);
+    if (!monthlyMap[m]) monthlyMap[m] = { month: m, income: 0, expense: 0 };
+    if (tx.type === "income") monthlyMap[m].income += tx.amount;
+    else if (tx.type === "expense") monthlyMap[m].expense += tx.amount;
+  });
+  const chartData = Object.values(monthlyMap).sort((a, b) => a.month.localeCompare(b.month)).slice(-6);
+  const pieData = Object.entries(categoryTotals).map(([name, value]) => ({ name, value }));
 
-      <main className="flex-1 p-6 md:ml-60 overflow-auto">
-        <motion.div
-          className="space-y-10"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          <motion.div variants={cardVariants} className="flex justify-between items-center flex-wrap gap-4">
-            <h2 className="text-3xl font-bold text-teal-400">
-              📊 {getGreeting()}, {user.username}!
-            </h2>
-            <button
-              onClick={handleLogout}
-              className="md:hidden bg-red-600 px-4 py-2 rounded hover:bg-red-700 transition"
-            >
-              Logout
-            </button>
-          </motion.div>
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="w-8 h-8 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin" />
+      </div>
+    );
+  }
 
-          <motion.div variants={cardVariants}><Insights /></motion.div>
-          <motion.div variants={cardVariants}><SummaryCards income={income} expense={expense} savings={savings} /></motion.div>
-          <motion.div variants={cardVariants}><Charts barData={barData} pieData={pieData} /></motion.div>
-          <motion.div variants={cardVariants}><RecentTransactions transactions={transactions} /></motion.div>
-          <motion.div variants={cardVariants}><GoalsProgress goals={goals} /></motion.div>
+  // ── Empty state ──────────────────────────────────────────────────────────
+  if (transactions.length === 0) {
+    return (
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
+        <div className="flex items-start justify-between">
+          <div>
+            <p className="text-sm text-slate-500 font-medium">{today}</p>
+            <h1 className="text-2xl font-bold text-slate-100 mt-0.5">
+              {greeting}, {user?.username?.split(" ")[0]} 👋
+            </h1>
+          </div>
+          <Link to="/add" className="btn-primary gap-2">
+            <Plus size={16} />
+            <span className="hidden sm:inline">Add Transaction</span>
+          </Link>
+        </div>
 
-          <motion.div variants={cardVariants} className="text-center">
-            <Link
-              to="/add"
-              className="bg-yellow-400 text-black px-6 py-3 rounded-full font-semibold hover:bg-yellow-500 transition"
-            >
-              ➕ Add New Transaction
-            </Link>
-          </motion.div>
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+          className="card p-8 flex flex-col items-center text-center max-w-lg mx-auto">
+          <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center mb-4">
+            <Sparkles size={28} className="text-indigo-400" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-100 mb-2">Welcome to Finverse!</h2>
+          <p className="text-sm text-slate-500 mb-8 leading-relaxed max-w-sm">
+            Your dashboard is ready. Follow these 3 steps to get started and take control of your money.
+          </p>
+          <div className="w-full space-y-3 mb-8">
+            {[
+              { step: "01", label: "Add your first income", sub: "Record your salary or any income source", path: "/add" },
+              { step: "02", label: "Track your expenses", sub: "Log what you spend daily to spot patterns", path: "/add" },
+              { step: "03", label: "Set a savings goal", sub: "Create targets to stay on track", path: "/goals" },
+            ].map((item, i) => (
+              <Link key={i} to={item.path}
+                className="flex items-center gap-4 p-4 rounded-xl text-left transition-all hover:-translate-y-0.5 hover:border-white/15 group"
+                style={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}>
+                <span className="text-xs font-bold text-indigo-400 mono w-6 shrink-0">{item.step}</span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-slate-200">{item.label}</p>
+                  <p className="text-xs text-slate-500 truncate">{item.sub}</p>
+                </div>
+                <ArrowRight size={15} className="text-slate-600 group-hover:text-indigo-400 transition-colors" />
+              </Link>
+            ))}
+          </div>
+          <Link to="/add" className="btn-primary px-8 h-11">
+            Add First Transaction
+          </Link>
         </motion.div>
-      </main>
-    </div>
+      </motion.div>
+    );
+  }
+
+  // ── Full dashboard ───────────────────────────────────────────────────────
+  return (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="space-y-8">
+      <div className="flex items-start justify-between">
+        <div>
+          <p className="text-sm text-slate-500 font-medium">{today}</p>
+          <h1 className="text-2xl font-bold text-slate-100 mt-0.5">
+            {greeting}, {user?.username?.split(" ")[0]}
+          </h1>
+        </div>
+        <Link to="/add" className="btn-primary gap-2">
+          <Plus size={16} />
+          <span className="hidden sm:inline">Add Transaction</span>
+        </Link>
+      </div>
+
+      <Insights />
+      <SummaryCards income={income} expense={expense} balance={balance} />
+      <Charts chartData={chartData} pieData={pieData} />
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <RecentTransactions transactions={transactions} />
+        <GoalsProgress goals={goals} />
+      </div>
+    </motion.div>
   );
 }

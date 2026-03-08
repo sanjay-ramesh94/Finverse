@@ -1,25 +1,51 @@
-import React from "react";
 import { motion } from "framer-motion";
+import { TrendingUp, TrendingDown, Wallet } from "lucide-react";
 
-export default function SummaryCards({ income, expense, savings }) {
-  const cardData = [
-    { label: "Income", value: income, color: "text-green-400" },
-    { label: "Expense", value: expense, color: "text-red-400" },
-    { label: "Net", value: savings, color: "text-teal-400" },
+const fmt = (n) => "₹" + n.toLocaleString("en-IN");
+
+export default function SummaryCards({ income, expense, balance }) {
+  const cards = [
+    {
+      label: "Total Balance",
+      value: fmt(balance),
+      icon: Wallet,
+      color: "text-indigo-400",
+      iconBg: "bg-indigo-500/10",
+      trend: balance >= 0 ? "positive" : "negative",
+    },
+    {
+      label: "Income",
+      value: fmt(income),
+      icon: TrendingUp,
+      color: "text-emerald-400",
+      iconBg: "bg-emerald-500/10",
+    },
+    {
+      label: "Expenses",
+      value: fmt(expense),
+      icon: TrendingDown,
+      color: "text-rose-400",
+      iconBg: "bg-rose-500/10",
+    },
   ];
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      {cardData.map((c) => (
+      {cards.map((c, i) => (
         <motion.div
           key={c.label}
-          className="bg-zinc-800 p-4 rounded shadow-md text-center"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 * cardData.indexOf(c) }}
+          transition={{ delay: i * 0.08, duration: 0.35 }}
+          className="card p-5 flex items-center gap-4"
         >
-          <h3 className="text-sm text-gray-400">{c.label}</h3>
-          <p className={`text-xl font-semibold ${c.color}`}>₹{c.value.toLocaleString()}</p>
+          <div className={`w-10 h-10 rounded-xl ${c.iconBg} flex items-center justify-center shrink-0`}>
+            <c.icon size={18} className={c.color} />
+          </div>
+          <div>
+            <p className="text-xs text-slate-500 font-medium">{c.label}</p>
+            <p className={`text-xl font-bold tracking-tight mt-0.5 mono ${c.color}`}>{c.value}</p>
+          </div>
         </motion.div>
       ))}
     </div>

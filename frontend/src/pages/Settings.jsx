@@ -2,123 +2,109 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { UserContext } from "../context/UserContext";
+import { useCurrency } from "../context/CurrencyContext";
+import { ChevronRight, Pencil, KeyRound, Monitor, Trash2, DollarSign, Info } from "lucide-react";
+
+function SettingRow({ icon: Icon, label, sub, onClick, danger }) {
+  return (
+    <button onClick={onClick} className={`w-full flex items-center gap-4 px-5 py-4 rounded-xl text-left transition-all ${danger ? "hover:bg-rose-500/10 hover:text-rose-400" : "hover:bg-white/5"
+      }`} style={{ background: "var(--surface-2)" }}>
+      <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${danger ? "bg-rose-500/10" : "bg-indigo-500/10"}`}>
+        <Icon size={17} className={danger ? "text-rose-400" : "text-indigo-400"} />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className={`text-sm font-medium ${danger ? "text-rose-400" : "text-slate-200"}`}>{label}</p>
+        {sub && <p className="text-xs text-slate-500 truncate mt-0.5">{sub}</p>}
+      </div>
+      <ChevronRight size={16} className="text-slate-600 shrink-0" />
+    </button>
+  );
+}
 
 export default function Settings() {
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
+  const { currency, setCurrency, currencies } = useCurrency();
 
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: (i = 1) => ({
-      opacity: 1,
-      y: 0,
-      transition: { delay: i * 0.1, duration: 0.4 },
-    }),
-  };
+  const sections = [
+    {
+      title: "Profile",
+      items: [
+        { icon: Pencil, label: "Edit Username", sub: user?.username, onClick: () => navigate("/edit-username") },
+      ],
+    },
+    {
+      title: "Security",
+      items: [
+        { icon: KeyRound, label: "Change Password", onClick: () => navigate("/change-password") },
+        { icon: Monitor, label: "Devices & Login History", onClick: () => navigate("/login-history") },
+      ],
+    },
+  ];
 
   return (
-    <motion.div
-      className="p-6 max-w-lg mx-auto text-white bg-zinc-900 rounded-2xl shadow-2xl mt-12 mb-20"
-      initial={{ opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-    >
-      <motion.h2
-        className="text-3xl font-bold mb-8 text-yellow-400 text-center tracking-wide"
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.3 }}
-      >
-        ⚙️ Settings
-      </motion.h2>
-
-      <div className="space-y-6">
-        {/* Profile Section */}
-        <motion.div
-          custom={1}
-          variants={sectionVariants}
-          initial="hidden"
-          animate="visible"
-          className="space-y-4"
-        >
-          <h3 className="text-xs text-gray-400 uppercase tracking-widest">Profile</h3>
-
-          <div
-            className="flex justify-between items-center bg-zinc-800 px-5 py-3 rounded-xl hover:bg-zinc-700 transition cursor-pointer"
-            onClick={() => navigate("/edit-username")}
-          >
-            <div>
-              <p className="text-sm font-medium">✏️ Edit Username</p>
-              <p className="text-xs text-gray-400">{user?.username}</p>
-            </div>
-            <span className="text-gray-500 text-lg">&gt;</span>
-          </div>
-        </motion.div>
-
-        {/* Security Section */}
-        <motion.div
-          custom={2}
-          variants={sectionVariants}
-          initial="hidden"
-          animate="visible"
-          className="space-y-4"
-        >
-          <h3 className="text-xs text-gray-400 uppercase tracking-widest">Security</h3>
-
-          <div
-            className="flex justify-between items-center bg-zinc-800 px-5 py-3 rounded-xl hover:bg-zinc-700 transition cursor-pointer"
-            onClick={() => navigate("/change-password")}
-          >
-            <span className="text-sm font-medium">🔑 Change Password</span>
-            <span className="text-gray-500 text-lg">&gt;</span>
-          </div>
-
-          <div
-            className="flex justify-between items-center bg-zinc-800 px-5 py-3 rounded-xl hover:bg-zinc-700 transition cursor-pointer"
-            onClick={() => navigate("/devices")}
-          >
-            <span className="text-sm font-medium">💻 Devices & Login History</span>
-            <span className="text-gray-500 text-lg">&gt;</span>
-          </div>
-        </motion.div>
-
-        {/* Data & Control */}
-        <motion.div
-          custom={3}
-          variants={sectionVariants}
-          initial="hidden"
-          animate="visible"
-          className="space-y-4"
-        >
-          <h3 className="text-xs text-gray-400 uppercase tracking-widest">Data & Control</h3>
-
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-            className="flex justify-between items-center bg-red-600 px-5 py-3 rounded-xl cursor-pointer hover:bg-red-700 transition"
-            onClick={() => navigate("/delete-account")}
-          >
-            <span className="text-sm font-medium text-white">🗑️ Delete Account</span>
-            <span className="text-white text-lg font-bold">&gt;</span>
-          </motion.div>
-        </motion.div>
-
-        {/* About */}
-        <motion.div
-          custom={4}
-          variants={sectionVariants}
-          initial="hidden"
-          animate="visible"
-          className="space-y-4"
-        >
-          <h3 className="text-xs text-gray-400 uppercase tracking-widest">About</h3>
-
-          <div className="bg-zinc-800 px-5 py-3 rounded-xl">
-            <p className="text-sm">📱 Finverse v1.0.0</p>
-            <p className="text-xs text-gray-400 mt-1">Contact: i.sanjayramesh94@gmail.com</p>
-          </div>
-        </motion.div>
+    <div className="max-w-lg mx-auto space-y-6">
+      <div>
+        <h1 className="page-title">Settings</h1>
+        <p className="text-sm text-slate-500 mt-1">Manage your account and preferences</p>
       </div>
-    </motion.div>
+
+      {sections.map((section, si) => (
+        <motion.div key={section.title} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: si * 0.07 }}
+          className="space-y-2">
+          <p className="text-xs text-slate-600 font-semibold uppercase tracking-widest px-1">{section.title}</p>
+          <div className="card overflow-hidden divide-y" style={{ "--tw-divide-opacity": 1 }}>
+            {section.items.map(item => (
+              <SettingRow key={item.label} {...item} />
+            ))}
+          </div>
+        </motion.div>
+      ))}
+
+      {/* Currency */}
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="space-y-2">
+        <p className="text-xs text-slate-600 font-semibold uppercase tracking-widest px-1">Preferences</p>
+        <div className="card p-5 space-y-4">
+          <div className="flex items-center gap-3 mb-1">
+            <div className="w-9 h-9 rounded-xl bg-indigo-500/10 flex items-center justify-center shrink-0">
+              <DollarSign size={17} className="text-indigo-400" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-slate-200">Currency</p>
+              <p className="text-xs text-slate-500">Displayed across the app</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            {currencies.map(c => (
+              <button key={c.code} onClick={() => setCurrency(c)}
+                className={`px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-left ${currency.code === c.code ? "bg-indigo-600 text-white" : "text-slate-400 hover:text-slate-200"
+                  }`}
+                style={{ background: currency.code === c.code ? undefined : "var(--surface-2)" }}>
+                <span className="font-bold mr-1.5">{c.symbol}</span>
+                <span className="text-xs">{c.code}</span>
+                <p className="text-xs opacity-60 truncate mt-0.5">{c.label}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Danger zone */}
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="space-y-2">
+        <p className="text-xs text-slate-600 font-semibold uppercase tracking-widest px-1">Danger Zone</p>
+        <div className="card overflow-hidden">
+          <SettingRow icon={Trash2} label="Delete Account" sub="Permanently delete your data" onClick={() => navigate("/delete-account")} danger />
+        </div>
+      </motion.div>
+
+      {/* About */}
+      <div className="card p-4 flex items-center gap-3">
+        <Info size={16} className="text-slate-600" />
+        <div>
+          <p className="text-xs text-slate-500">Finverse v1.0.0 · Built with ❤️</p>
+          <p className="text-xs text-slate-600">i.sanjayramesh94@gmail.com</p>
+        </div>
+      </div>
+    </div>
   );
 }
