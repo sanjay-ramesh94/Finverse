@@ -40,8 +40,8 @@ export default function Login() {
       localStorage.setItem("token", res.data.token);
       setUser(res.data.user);
       navigate("/home");
-    } catch {
-      setError("Google sign-in failed. Please try again.");
+    } catch (err) {
+      setError(err?.response?.data?.msg || "Google sign-in failed. Please try again.");
     }
   };
 
