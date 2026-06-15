@@ -44,7 +44,7 @@ export default function Calculator() {
               <div className="flex items-center gap-4">
                 <span className="text-3xl">{card.emoji}</span>
                 <div>
-                  <h2 className="text-sm font-semibold text-slate-200">{card.title}</h2>
+                  <h2 className="text-sm font-semibold text-slate-700">{card.title}</h2>
                   <p className="text-xs text-slate-500 mt-0.5">{card.description}</p>
                 </div>
               </div>

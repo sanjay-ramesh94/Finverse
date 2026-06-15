@@ -28,21 +28,12 @@ export default function Navbar() {
     { label: "Goals", path: "/goals" },
     { label: "Investment", path: "/investment" },
     { label: "Calculator", path: "/calculators" },
-    { label: "Wealth Dashboard", path: "/wealth/portfolio", isWealth: true },
     { label: "Settings", path: "/settings" },
     { label: "Scan Receipt", path: "/scan-receipt" },
   ];
 
-  const handleWealthClick = () => {
-    setMenuOpen(false);
-    navigate("/wealth-transition");
-    setTimeout(() => {
-      navigate("/wealth/portfolio");
-    }, 800); // match with transition animation
-  };
-
   return (
-    <nav className="bg-zinc-900 text-white px-6 py-4 shadow-md">
+    <nav className="bg-white text-slate-900 px-6 py-4 shadow-md">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <div className="text-xl font-bold tracking-wide text-yellow-400">
           Finverse
@@ -50,7 +41,7 @@ export default function Navbar() {
 
         {user && (
           <button
-            className="md:hidden text-white text-2xl"
+            className="md:hidden text-slate-900 text-2xl"
             onClick={() => setMenuOpen(!menuOpen)}
           >
             {menuOpen ? <FaTimes /> : <FaBars />}
@@ -61,18 +52,6 @@ export default function Navbar() {
           <ul className="hidden md:flex space-x-6 text-sm font-medium">
             {navLinks.map((link) => (
               <li key={link.path}>
-                {link.isWealth ? (
-                  <span
-                    onClick={handleWealthClick}
-                    className={`cursor-pointer pb-1 transition-all ${
-                      isActive("/wealth/portfolio")
-                        ? "border-b-2 border-yellow-400 text-yellow-300"
-                        : "hover:text-yellow-400"
-                    }`}
-                  >
-                    {link.label}
-                  </span>
-                ) : (
                   <Link
                     to={link.path}
                     className={`pb-1 transition-all ${
@@ -83,13 +62,12 @@ export default function Navbar() {
                   >
                     {link.label}
                   </Link>
-                )}
               </li>
             ))}
             <li>
               <button
                 onClick={handleLogout}
-                className="bg-red-600 px-3 py-1 rounded text-white hover:bg-red-700"
+                className="bg-red-600 px-3 py-1 rounded text-slate-900 hover:bg-red-700"
               >
                 Logout
               </button>
@@ -100,21 +78,9 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {menuOpen && user && (
-        <ul className="md:hidden mt-4 space-y-3 text-sm font-medium bg-zinc-800 px-4 py-4 rounded-lg shadow">
+        <ul className="md:hidden mt-4 space-y-3 text-sm font-medium bg-white shadow-sm border border-slate-200 px-4 py-4 rounded-lg shadow">
           {navLinks.map((link) => (
             <li key={link.path}>
-              {link.isWealth ? (
-                <span
-                  onClick={handleWealthClick}
-                  className={`block pb-1 cursor-pointer ${
-                    isActive("/wealth/portfolio")
-                      ? "text-yellow-300 border-b border-yellow-400"
-                      : "hover:text-yellow-400"
-                  }`}
-                >
-                  {link.label}
-                </span>
-              ) : (
                 <Link
                   to={link.path}
                   onClick={() => setMenuOpen(false)}
@@ -126,7 +92,6 @@ export default function Navbar() {
                 >
                   {link.label}
                 </Link>
-              )}
             </li>
           ))}
           <li>
@@ -135,7 +100,7 @@ export default function Navbar() {
                 handleLogout();
                 setMenuOpen(false);
               }}
-              className="w-full bg-red-600 px-3 py-2 rounded text-white hover:bg-red-700"
+              className="w-full bg-red-600 px-3 py-2 rounded text-slate-900 hover:bg-red-700"
             >
               Logout
             </button>

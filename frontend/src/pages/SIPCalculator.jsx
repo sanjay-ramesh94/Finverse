@@ -71,8 +71,8 @@ export default function SIPCalculator() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-zinc-800 text-white px-4 py-10">
-      <div className="max-w-5xl mx-auto bg-zinc-800 p-6 rounded-xl shadow-2xl flex flex-col md:flex-row gap-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-50 to-white text-slate-900 px-4 py-10">
+      <div className="max-w-5xl mx-auto bg-white shadow-sm border border-slate-200 p-6 rounded-xl shadow-2xl flex flex-col md:flex-row gap-8">
         {/* LEFT SECTION */}
         <div className="flex-1 space-y-6">
           {/* Toggle */}
@@ -80,7 +80,7 @@ export default function SIPCalculator() {
             <button
               onClick={() => setType("sip")}
               className={`px-4 py-2 rounded-full font-semibold ${
-                type === "sip" ? "bg-green-500 text-black" : "bg-zinc-700"
+                type === "sip" ? "bg-green-500 text-black" : "bg-slate-50 border border-slate-200"
               }`}
             >
               SIP
@@ -88,7 +88,7 @@ export default function SIPCalculator() {
             <button
               onClick={() => setType("lumpsum")}
               className={`px-4 py-2 rounded-full font-semibold ${
-                type === "lumpsum" ? "bg-green-500 text-black" : "bg-zinc-700"
+                type === "lumpsum" ? "bg-green-500 text-black" : "bg-slate-50 border border-slate-200"
               }`}
             >
               Lumpsum
@@ -103,7 +103,7 @@ export default function SIPCalculator() {
             <div className="flex justify-between items-center gap-4">
               <input
                 type="number"
-                className="w-24 px-2 py-1 text-right rounded bg-zinc-700 text-white"
+                className="w-24 px-2 py-1 text-right rounded bg-slate-50 border border-slate-200 text-slate-900"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
               />
@@ -125,7 +125,7 @@ export default function SIPCalculator() {
               <div className="flex justify-between items-center gap-4">
                 <input
                   type="number"
-                  className="w-24 px-2 py-1 text-right rounded bg-zinc-700 text-white"
+                  className="w-24 px-2 py-1 text-right rounded bg-slate-50 border border-slate-200 text-slate-900"
                   value={stepUp}
                   onChange={(e) => setStepUp(e.target.value)}
                 />
@@ -147,7 +147,7 @@ export default function SIPCalculator() {
             <div className="flex justify-between items-center gap-4">
               <input
                 type="number"
-                className="w-24 px-2 py-1 text-right rounded bg-zinc-700 text-white"
+                className="w-24 px-2 py-1 text-right rounded bg-slate-50 border border-slate-200 text-slate-900"
                 value={rate}
                 onChange={(e) => setRate(e.target.value)}
               />
@@ -168,7 +168,7 @@ export default function SIPCalculator() {
             <div className="flex justify-between items-center gap-4">
               <input
                 type="number"
-                className="w-24 px-2 py-1 text-right rounded bg-zinc-700 text-white"
+                className="w-24 px-2 py-1 text-right rounded bg-slate-50 border border-slate-200 text-slate-900"
                 value={duration}
                 onChange={(e) => setDuration(e.target.value)}
               />

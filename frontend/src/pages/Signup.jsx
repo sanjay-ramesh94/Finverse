@@ -59,14 +59,14 @@ export default function Signup() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        className="w-full max-w-sm"
+        className="w-full max-w-sm bg-white p-8 sm:p-10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100"
       >
         {/* Logo */}
         <div className="flex flex-col items-center mb-10">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center mb-4">
-            <Wallet size={22} className="text-white" />
+          <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center mb-4 shadow-sm">
+            <Wallet size={28} className="text-slate-800" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-100 tracking-tight">
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
             {step === 1 ? "Create account" : "Verify email"}
           </h1>
           <p className="text-sm text-slate-500 mt-1">
@@ -77,7 +77,7 @@ export default function Signup() {
         {/* Step indicator */}
         <div className="flex gap-2 mb-8">
           {[1, 2].map(s => (
-            <div key={s} className={`h-1 flex-1 rounded-full transition-all duration-300 ${s <= step ? "bg-indigo-500" : "bg-white/10"}`} />
+            <div key={s} className={`h-1 flex-1 rounded-full transition-all duration-300 ${s <= step ? "bg-slate-900" : "bg-slate-100"}`} />
           ))}
         </div>
 
@@ -133,7 +133,7 @@ export default function Signup() {
                 {loading ? "Verifying…" : "Verify & Create Account"}
               </button>
               <button type="button" onClick={() => setStep(1)}
-                className="btn-ghost w-full h-10 flex items-center justify-center gap-2 text-slate-400">
+                className="btn-ghost w-full h-10 flex items-center justify-center gap-2 text-slate-500">
                 <ArrowLeft size={16} /> Back
               </button>
             </motion.form>
@@ -142,7 +142,7 @@ export default function Signup() {
 
         <p className="text-center text-sm text-slate-500 mt-8">
           Already have an account?{" "}
-          <Link to="/" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">Sign in</Link>
+          <Link to="/" className="text-slate-800 hover:text-slate-700 font-medium transition-colors">Sign in</Link>
         </p>
       </motion.div>
     </div>

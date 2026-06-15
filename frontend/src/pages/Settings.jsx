@@ -7,13 +7,13 @@ import { ChevronRight, Pencil, KeyRound, Monitor, Trash2, DollarSign, Info } fro
 
 function SettingRow({ icon: Icon, label, sub, onClick, danger }) {
   return (
-    <button onClick={onClick} className={`w-full flex items-center gap-4 px-5 py-4 rounded-xl text-left transition-all ${danger ? "hover:bg-rose-500/10 hover:text-rose-400" : "hover:bg-white/5"
+    <button onClick={onClick} className={`w-full flex items-center gap-4 px-5 py-4 rounded-xl text-left transition-all ${danger ? "hover:bg-rose-500/10 hover:text-rose-400" : "hover:bg-black/5"
       }`} style={{ background: "var(--surface-2)" }}>
       <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${danger ? "bg-rose-500/10" : "bg-indigo-500/10"}`}>
-        <Icon size={17} className={danger ? "text-rose-400" : "text-indigo-400"} />
+        <Icon size={17} className={danger ? "text-rose-400" : "text-slate-800"} />
       </div>
       <div className="flex-1 min-w-0">
-        <p className={`text-sm font-medium ${danger ? "text-rose-400" : "text-slate-200"}`}>{label}</p>
+        <p className={`text-sm font-medium ${danger ? "text-rose-400" : "text-slate-700"}`}>{label}</p>
         {sub && <p className="text-xs text-slate-500 truncate mt-0.5">{sub}</p>}
       </div>
       <ChevronRight size={16} className="text-slate-600 shrink-0" />
@@ -67,17 +67,17 @@ export default function Settings() {
         <div className="card p-5 space-y-4">
           <div className="flex items-center gap-3 mb-1">
             <div className="w-9 h-9 rounded-xl bg-indigo-500/10 flex items-center justify-center shrink-0">
-              <DollarSign size={17} className="text-indigo-400" />
+              <DollarSign size={17} className="text-slate-800" />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-200">Currency</p>
+              <p className="text-sm font-medium text-slate-700">Currency</p>
               <p className="text-xs text-slate-500">Displayed across the app</p>
             </div>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {currencies.map(c => (
               <button key={c.code} onClick={() => setCurrency(c)}
-                className={`px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-left ${currency.code === c.code ? "bg-indigo-600 text-white" : "text-slate-400 hover:text-slate-200"
+                className={`px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-left ${currency.code === c.code ? "bg-slate-900 text-white text-slate-900" : "text-slate-500 hover:text-slate-700"
                   }`}
                 style={{ background: currency.code === c.code ? undefined : "var(--surface-2)" }}>
                 <span className="font-bold mr-1.5">{c.symbol}</span>

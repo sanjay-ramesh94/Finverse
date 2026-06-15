@@ -8,7 +8,7 @@ const ICONS = {
     success: <CheckCircle2 size={18} className="text-emerald-400 shrink-0" />,
     error: <XCircle size={18} className="text-rose-400 shrink-0" />,
     warning: <AlertCircle size={18} className="text-amber-400 shrink-0" />,
-    info: <Info size={18} className="text-indigo-400 shrink-0" />,
+    info: <Info size={18} className="text-slate-800 shrink-0" />,
 };
 
 const BARS = {
@@ -33,11 +33,11 @@ function Toast({ toast, onRemove }) {
             <div className={`absolute left-0 top-0 bottom-0 w-1 rounded-l-xl ${BARS[toast.type]}`} />
             <div className="ml-1">{ICONS[toast.type]}</div>
             <div className="flex-1 min-w-0 pt-0.5">
-                {toast.title && <p className="text-sm font-semibold text-slate-100">{toast.title}</p>}
-                <p className="text-sm text-slate-400 leading-snug">{toast.message}</p>
+                {toast.title && <p className="text-sm font-semibold text-slate-900">{toast.title}</p>}
+                <p className="text-sm text-slate-500 leading-snug">{toast.message}</p>
             </div>
             <button onClick={() => onRemove(toast.id)}
-                className="shrink-0 text-slate-600 hover:text-slate-300 transition-colors mt-0.5">
+                className="shrink-0 text-slate-600 hover:text-slate-600 transition-colors mt-0.5">
                 <X size={15} />
             </button>
         </motion.div>

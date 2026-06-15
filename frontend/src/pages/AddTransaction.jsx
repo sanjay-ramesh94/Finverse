@@ -3,36 +3,40 @@ import axios from "axios";
 import { UserContext } from "../context/UserContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, Upload, X } from "lucide-react";
+import { 
+  CheckCircle2, Upload, X,
+  Coffee, Car, ShoppingBag, Gamepad2, Pill, Zap, HomeIcon, BookOpen, Coins, CreditCard,
+  Briefcase, Laptop, LineChart, Gift, Landmark, Smartphone, Banknote
+} from "lucide-react";
 import { useToast } from "../context/ToastContext";
 
 // ─── Category config ────────────────────────────────────────────────
 const CATEGORIES = {
   expense: [
-    { label: "Food", icon: "🍔" },
-    { label: "Transport", icon: "🚗" },
-    { label: "Shopping", icon: "🛍️" },
-    { label: "Entertainment", icon: "🎮" },
-    { label: "Health", icon: "💊" },
-    { label: "Utilities", icon: "⚡" },
-    { label: "Rent", icon: "🏠" },
-    { label: "Education", icon: "📚" },
-    { label: "Gold", icon: "🥇" },
-    { label: "Other", icon: "💳" },
+    { label: "Food", icon: <Coffee size={20} /> },
+    { label: "Transport", icon: <Car size={20} /> },
+    { label: "Shopping", icon: <ShoppingBag size={20} /> },
+    { label: "Entertainment", icon: <Gamepad2 size={20} /> },
+    { label: "Health", icon: <Pill size={20} /> },
+    { label: "Utilities", icon: <Zap size={20} /> },
+    { label: "Rent", icon: <HomeIcon size={20} /> },
+    { label: "Education", icon: <BookOpen size={20} /> },
+    { label: "Gold", icon: <Coins size={20} /> },
+    { label: "Other", icon: <CreditCard size={20} /> },
   ],
   income: [
-    { label: "Salary", icon: "💼" },
-    { label: "Freelance", icon: "💻" },
-    { label: "Investment", icon: "📈" },
-    { label: "Bonus", icon: "🎁" },
-    { label: "Gift", icon: "🎀" },
-    { label: "Other", icon: "💰" },
+    { label: "Salary", icon: <Briefcase size={20} /> },
+    { label: "Freelance", icon: <Laptop size={20} /> },
+    { label: "Investment", icon: <LineChart size={20} /> },
+    { label: "Bonus", icon: <Gift size={20} /> },
+    { label: "Gift", icon: <Gift size={20} /> },
+    { label: "Other", icon: <Banknote size={20} /> },
   ],
   transfer: [
-    { label: "Bank Transfer", icon: "🏦" },
-    { label: "UPI", icon: "📱" },
-    { label: "Cash", icon: "💵" },
-    { label: "Card", icon: "💳" },
+    { label: "Bank Transfer", icon: <Landmark size={20} /> },
+    { label: "UPI", icon: <Smartphone size={20} /> },
+    { label: "Cash", icon: <Banknote size={20} /> },
+    { label: "Card", icon: <CreditCard size={20} /> },
   ],
 };
 
@@ -44,7 +48,7 @@ const ACCOUNTS = ["Bank", "UPI", "Cash", "Credit Card", "Wallet"];
 const TYPE_CONFIG = {
   expense: { label: "Expense", color: "border-rose-500 bg-rose-500/10 text-rose-400", dot: "bg-rose-500" },
   income: { label: "Income", color: "border-emerald-500 bg-emerald-500/10 text-emerald-400", dot: "bg-emerald-500" },
-  transfer: { label: "Transfer", color: "border-indigo-500 bg-indigo-500/10 text-indigo-400", dot: "bg-indigo-500" },
+  transfer: { label: "Transfer", color: "border-indigo-500 bg-indigo-500/10 text-slate-800", dot: "bg-indigo-500" },
 };
 
 // ─── Success overlay ─────────────────────────────────────────────────
@@ -60,7 +64,7 @@ function SuccessOverlay({ onDone }) {
       <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200, delay: 0.1 }}>
         <CheckCircle2 size={64} className="text-emerald-400 mb-4" />
       </motion.div>
-      <h3 className="text-xl font-semibold text-slate-100 mb-1">Transaction Saved!</h3>
+      <h3 className="text-xl font-semibold text-slate-900 mb-1">Transaction Saved!</h3>
       <p className="text-sm text-slate-500 mb-8">Your record has been added.</p>
       <div className="flex gap-3">
         <button onClick={onDone} className="btn-primary px-6">Add Another</button>
@@ -143,7 +147,7 @@ export default function AddTransaction() {
     <div className="max-w-xl mx-auto space-y-6 relative">
       <AnimatePresence>
         {success && (
-          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/60 backdrop-blur-sm p-4">
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-slate-50/60 backdrop-blur-sm p-4">
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -153,7 +157,7 @@ export default function AddTransaction() {
               <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200, delay: 0.1 }}>
                 <CheckCircle2 size={56} className="text-emerald-400 mb-4" />
               </motion.div>
-              <h3 className="text-xl font-semibold text-slate-100 mb-1">Transaction Saved!</h3>
+              <h3 className="text-xl font-semibold text-slate-900 mb-1">Transaction Saved!</h3>
               <p className="text-sm text-slate-500 mb-8">Your record has been added successfully.</p>
               <div className="flex gap-3 w-full">
                 <button onClick={resetForm} className="btn-primary flex-1">Add Another</button>
@@ -192,7 +196,7 @@ export default function AddTransaction() {
         <div className="card p-5 space-y-4">
           <p className="label mb-0">Amount</p>
           <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-semibold text-lg">₹</span>
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-semibold text-lg">₹</span>
             <input
               type="number"
               name="amount"
@@ -208,7 +212,7 @@ export default function AddTransaction() {
           <div className="flex flex-wrap gap-2">
             {QUICK_AMOUNTS.map(v => (
               <button key={v} type="button" onClick={() => addAmount(v)}
-                className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-colors"
+                className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-500 hover:text-slate-800 hover:bg-indigo-500/10 transition-colors"
                 style={{ background: "var(--surface-2)" }}>
                 +{v.toLocaleString("en-IN")}
               </button>
@@ -230,12 +234,12 @@ export default function AddTransaction() {
             {cats.map(c => (
               <button key={c.label} type="button" onClick={() => setCategory(c.label)}
                 className={`flex flex-col items-center gap-1.5 p-3 rounded-xl transition-all text-xs font-medium ${form.category === c.label
-                  ? "bg-indigo-600 text-white"
-                  : "text-slate-400 hover:bg-white/5"
+                  ? "bg-slate-900 text-white text-slate-900"
+                  : "text-slate-500 hover:bg-black/5"
                   }`}
                 style={{ background: form.category === c.label ? undefined : "var(--surface-2)" }}
               >
-                <span className="text-xl">{c.icon}</span>
+                <span>{c.icon}</span>
                 <span className="truncate w-full text-center">{c.label}</span>
               </button>
             ))}
@@ -249,8 +253,8 @@ export default function AddTransaction() {
             {ACCOUNTS.map(acc => (
               <button key={acc} type="button" onClick={() => setAccount(acc)}
                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${form.account === acc
-                  ? "bg-indigo-600 text-white"
-                  : "text-slate-400 hover:text-slate-200"
+                  ? "bg-slate-900 text-white text-slate-900"
+                  : "text-slate-500 hover:text-slate-700"
                   }`}
                 style={{ background: form.account === acc ? undefined : "var(--surface-2)" }}
               >
@@ -286,12 +290,12 @@ export default function AddTransaction() {
                   <img src={URL.createObjectURL(image)} alt="Preview"
                     className="w-full max-h-48 object-cover rounded-xl border" style={{ borderColor: "var(--border)" }} />
                   <button type="button" onClick={(e) => { e.preventDefault(); setImage(null); }}
-                    className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-red-600 transition-colors">
+                    className="absolute top-2 right-2 w-7 h-7 rounded-full bg-slate-50/60 flex items-center justify-center text-slate-900 hover:bg-red-600 transition-colors">
                     <X size={14} />
                   </button>
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center gap-2 py-8 rounded-xl border-2 border-dashed text-slate-600 hover:text-slate-400 hover:border-indigo-500/50 transition-all"
+                <div className="flex flex-col items-center justify-center gap-2 py-8 rounded-xl border-2 border-dashed text-slate-600 hover:text-slate-500 hover:border-indigo-500/50 transition-all"
                   style={{ borderColor: "var(--border)", background: "var(--surface-2)" }}>
                   <Upload size={22} />
                   <p className="text-sm">Click to upload a receipt</p>

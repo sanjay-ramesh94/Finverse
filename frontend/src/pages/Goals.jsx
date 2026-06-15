@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { Target, Plus, Trash2, Calendar, Rocket, IndianRupee } from "lucide-react";
 
 export default function Goals() {
   const { user } = useContext(UserContext);
@@ -88,52 +89,68 @@ export default function Goals() {
     }
   };
 
-  const renderGoal = (goal, color, index) => {
+  const renderGoal = (goal, icon, colorClass, index) => {
     const current = goal.current ?? 0;
     const percentage = Math.min(100, (current / goal.target) * 100).toFixed(1);
 
     return (
       <motion.div
         key={goal._id}
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.05 }}
-        className="mb-6 p-4 bg-zinc-800 rounded-lg shadow-lg"
+        className="card p-5"
       >
-        <div className="flex justify-between text-sm mb-1">
-          <span>{goal.name}</span>
-          <span>
-            ₹{current.toLocaleString()} / ₹{goal.target.toLocaleString()} ({percentage}%)
-          </span>
+        <div className="flex justify-between items-start mb-4">
+          <div className="flex items-center gap-3">
+             <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: "var(--surface-2)" }}>
+                {icon}
+             </div>
+             <div>
+                <h4 className="font-semibold text-slate-900">{goal.name}</h4>
+                <p className="text-xs text-slate-500 mt-0.5">₹{current.toLocaleString("en-IN")} / ₹{goal.target.toLocaleString("en-IN")}</p>
+             </div>
+          </div>
+          <button
+            onClick={() => handleDeleteGoal(goal._id)}
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors"
+            title="Delete Goal"
+          >
+            <Trash2 size={16} />
+          </button>
         </div>
-        <div className="w-full h-3 bg-zinc-900 rounded overflow-hidden mb-2">
+        
+        <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden mb-4">
           <motion.div
-            className={`${color} h-full`}
+            className={`h-full rounded-full ${colorClass}`}
             initial={{ width: 0 }}
             animate={{ width: `${percentage}%` }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           />
         </div>
-        <div className="flex gap-2 items-center">
-          <input
-            type="number"
-            placeholder="Add ₹"
-            value={amountInputs[goal._id] || ""}
-            onChange={(e) => setAmountInputs((prev) => ({ ...prev, [goal._id]: e.target.value }))}
-            className="bg-zinc-900 text-white px-2 py-1 rounded border border-zinc-700 w-24"
-          />
-          <button
-            onClick={() => handleAddAmountToGoal(goal._id)}
-            className="bg-teal-600 px-2 py-1 text-sm rounded text-white hover:bg-teal-700"
-          >
-            ➕ Add
-          </button>
-          <button
-            onClick={() => handleDeleteGoal(goal._id)}
-            className="text-red-400 text-xs hover:underline ml-auto"
-          >
-            ❌ Delete
-          </button>
+        
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <span className="text-xs font-semibold text-slate-700">{percentage}% Achieved</span>
+          
+          <div className="flex gap-2 items-center">
+            <div className="relative">
+              <IndianRupee size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-500" />
+              <input
+                type="number"
+                placeholder="Add amount"
+                value={amountInputs[goal._id] || ""}
+                onChange={(e) => setAmountInputs((prev) => ({ ...prev, [goal._id]: e.target.value }))}
+                className="input py-1.5 pl-7 pr-3 text-xs w-28 h-8"
+              />
+            </div>
+            <button
+              onClick={() => handleAddAmountToGoal(goal._id)}
+              disabled={!amountInputs[goal._id]}
+              className="btn-primary h-8 px-3 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Add
+            </button>
+          </div>
         </div>
       </motion.div>
     );
@@ -143,63 +160,89 @@ export default function Goals() {
   const longTermGoals = goals.filter((g) => g.type === "long-term");
 
   return (
-    <div className="min-h-screen bg-black text-white px-4 py-10">
-      <div className="max-w-4xl mx-auto bg-zinc-900 p-6 rounded-xl shadow-lg">
-        <h2 className="text-3xl font-bold text-teal-400 mb-6 text-center">🎯 Goals Dashboard</h2>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="page-header">
+        <div>
+          <h1 className="page-title">Goals</h1>
+          <p className="text-sm text-slate-500 mt-1">Track and manage your financial milestones</p>
+        </div>
+      </div>
 
-        <form onSubmit={handleAddGoal} className="mb-10 space-y-4">
-          <h3 className="text-xl font-semibold">➕ Add New Goal</h3>
-          <div className="flex flex-wrap gap-3">
-            <input
-              type="text"
-              name="name"
-              placeholder="Goal Name"
-              value={goalForm.name}
-              onChange={handleGoalInput}
-              className="px-3 py-2 rounded bg-zinc-800 text-white border border-zinc-600"
-              required
-            />
+      {/* Add Goal Form */}
+      <form onSubmit={handleAddGoal} className="card p-5 space-y-4">
+        <div className="flex items-center gap-2 mb-2">
+          <Target size={18} className="text-slate-800" />
+          <h3 className="font-semibold text-slate-900">Add New Goal</h3>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+          <input
+            type="text"
+            name="name"
+            placeholder="Goal Name"
+            value={goalForm.name}
+            onChange={handleGoalInput}
+            className="input"
+            required
+          />
+          <div className="relative">
+            <IndianRupee size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
             <input
               type="number"
               name="target"
               placeholder="Target Amount"
               value={goalForm.target}
               onChange={handleGoalInput}
-              className="px-3 py-2 rounded bg-zinc-800 text-white border border-zinc-600"
+              className="input pl-8"
               required
             />
-            <select
-              name="type"
-              value={goalForm.type}
-              onChange={handleGoalInput}
-              className="px-3 py-2 rounded bg-zinc-800 text-white border border-zinc-600"
-            >
-              <option value="short-term">Short-Term</option>
-              <option value="long-term">Long-Term</option>
-            </select>
-            <button
-              type="submit"
-              className="bg-teal-500 px-4 py-2 rounded text-white hover:bg-teal-600"
-            >
-              ➕ Add Goal
-            </button>
           </div>
-        </form>
+          <select
+            name="type"
+            value={goalForm.type}
+            onChange={handleGoalInput}
+            className="input"
+          >
+            <option value="short-term">Short-Term</option>
+            <option value="long-term">Long-Term</option>
+          </select>
+          <button type="submit" className="btn-primary h-11 md:h-auto">
+            <Plus size={16} className="mr-2" /> Add Goal
+          </button>
+        </div>
+      </form>
 
-        {shortTermGoals.length > 0 && (
-          <div className="mt-10">
-            <h3 className="text-xl font-semibold mb-2">🗓️ Short-Term Goals</h3>
-            {shortTermGoals.map((goal, i) => renderGoal(goal, "bg-blue-500", i))}
+      {/* Goal Lists */}
+      {shortTermGoals.length > 0 && (
+        <div className="mt-8">
+          <div className="flex items-center gap-2 mb-4">
+            <Calendar size={18} className="text-blue-500" />
+            <h3 className="text-lg font-semibold text-slate-900">Short-Term Goals</h3>
           </div>
-        )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {shortTermGoals.map((goal, i) => renderGoal(goal, <Target size={18} className="text-blue-500" />, "bg-blue-500", i))}
+          </div>
+        </div>
+      )}
 
-        {longTermGoals.length > 0 && (
-          <div className="mt-10">
-            <h3 className="text-xl font-semibold mb-2">🚀 Long-Term Goals</h3>
-            {longTermGoals.map((goal, i) => renderGoal(goal, "bg-purple-500", i))}
+      {longTermGoals.length > 0 && (
+        <div className="mt-8">
+          <div className="flex items-center gap-2 mb-4">
+            <Rocket size={18} className="text-indigo-500" />
+            <h3 className="text-lg font-semibold text-slate-900">Long-Term Goals</h3>
           </div>
-        )}
-      </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {longTermGoals.map((goal, i) => renderGoal(goal, <Target size={18} className="text-indigo-500" />, "bg-indigo-500", i))}
+          </div>
+        </div>
+      )}
+
+      {goals.length === 0 && (
+        <div className="h-64 flex flex-col items-center justify-center text-slate-500">
+          <Target size={48} className="mb-4 text-slate-300" />
+          <p>No goals set yet. Add one above to get started!</p>
+        </div>
+      )}
     </div>
   );
 }

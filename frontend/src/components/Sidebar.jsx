@@ -15,7 +15,6 @@ const navItems = [
     { to: "/goals", icon: Target, label: "Goals" },
     { to: "/investment", icon: TrendingUp, label: "Investments" },
     { to: "/calculators", icon: Calculator, label: "Calculators" },
-    { to: "/wealth-dashboard", icon: BarChart3, label: "Wealth" },
     { to: "/settings", icon: Settings, label: "Settings" },
 ];
 
@@ -38,10 +37,10 @@ export default function Sidebar() {
 
             {/* Logo */}
             <div className="flex items-center gap-3 px-4 py-5 shrink-0">
-                <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center shrink-0 shadow-lg shadow-indigo-600/30">
-                    <Wallet size={16} className="text-white" />
+                <div className="w-8 h-8 rounded-xl bg-slate-900 text-white flex items-center justify-center shrink-0 shadow-lg shadow-slate-900/10">
+                    <Wallet size={16} className="text-slate-900" />
                 </div>
-                <span className="font-bold text-slate-100 text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                <span className="font-bold text-slate-900 text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
                     Finverse
                 </span>
             </div>
@@ -56,8 +55,8 @@ export default function Sidebar() {
                         to={to}
                         className={({ isActive }) =>
                             `relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${isActive
-                                ? "text-white"
-                                : "text-slate-500 hover:text-slate-200 hover:bg-white/[0.04]"
+                                ? "text-slate-900"
+                                : "text-slate-500 hover:text-slate-700 hover:bg-white/[0.04]"
                             }`
                         }
                         style={({ isActive }) => isActive ? { background: "rgba(99,102,241,0.15)" } : {}}
@@ -66,7 +65,7 @@ export default function Sidebar() {
                             <>
                                 {/* Pill indicator */}
                                 <span className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 rounded-r-full transition-all duration-200 ${isActive ? "h-5 bg-indigo-400" : "h-0"}`} />
-                                <Icon size={18} className={`shrink-0 ${isActive ? "text-indigo-400" : ""}`} />
+                                <Icon size={18} className={`shrink-0 ${isActive ? "text-slate-800" : ""}`} />
                                 <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
                                     {label}
                                 </span>
@@ -80,11 +79,11 @@ export default function Sidebar() {
             <div className="px-2 pb-4 flex flex-col gap-1">
                 <div className="divider mx-1 mb-2" />
                 <div className="flex items-center gap-3 px-3 py-2.5">
-                    <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center shrink-0 text-xs font-bold text-white uppercase shadow-md shadow-indigo-600/30">
+                    <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center shrink-0 text-xs font-bold text-slate-900 uppercase shadow-md shadow-slate-900/10">
                         {user?.username?.charAt(0) || "U"}
                     </div>
                     <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 min-w-0">
-                        <p className="text-sm font-semibold text-slate-200 truncate">{user?.username}</p>
+                        <p className="text-sm font-semibold text-slate-700 truncate">{user?.username}</p>
                         <p className="text-xs text-slate-500 truncate">{user?.email}</p>
                     </div>
                 </div>

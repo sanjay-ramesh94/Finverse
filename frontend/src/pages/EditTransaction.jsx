@@ -4,31 +4,35 @@ import axios from "axios";
 import { UserContext } from "../context/UserContext";
 import { useToast } from "../context/ToastContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { Upload, X, ArrowLeft } from "lucide-react";
+import { 
+  Upload, X, ArrowLeft,
+  Coffee, Car, ShoppingBag, Gamepad2, Pill, Zap, HomeIcon, BookOpen, Coins, CreditCard,
+  Briefcase, Laptop, LineChart, Gift, Landmark, Smartphone, Banknote
+} from "lucide-react";
 
 const CATEGORIES = {
   expense: [
-    { label: "Food", icon: "🍔" }, { label: "Transport", icon: "🚗" },
-    { label: "Shopping", icon: "🛍️" }, { label: "Entertainment", icon: "🎮" },
-    { label: "Health", icon: "💊" }, { label: "Utilities", icon: "⚡" },
-    { label: "Rent", icon: "🏠" }, { label: "Education", icon: "📚" },
-    { label: "Gold", icon: "🥇" }, { label: "Other", icon: "💳" },
+    { label: "Food", icon: <Coffee size={20} /> }, { label: "Transport", icon: <Car size={20} /> },
+    { label: "Shopping", icon: <ShoppingBag size={20} /> }, { label: "Entertainment", icon: <Gamepad2 size={20} /> },
+    { label: "Health", icon: <Pill size={20} /> }, { label: "Utilities", icon: <Zap size={20} /> },
+    { label: "Rent", icon: <HomeIcon size={20} /> }, { label: "Education", icon: <BookOpen size={20} /> },
+    { label: "Gold", icon: <Coins size={20} /> }, { label: "Other", icon: <CreditCard size={20} /> },
   ],
   income: [
-    { label: "Salary", icon: "💼" }, { label: "Freelance", icon: "💻" },
-    { label: "Investment", icon: "📈" }, { label: "Bonus", icon: "🎁" },
-    { label: "Gift", icon: "🎀" }, { label: "Other", icon: "💰" },
+    { label: "Salary", icon: <Briefcase size={20} /> }, { label: "Freelance", icon: <Laptop size={20} /> },
+    { label: "Investment", icon: <LineChart size={20} /> }, { label: "Bonus", icon: <Gift size={20} /> },
+    { label: "Gift", icon: <Gift size={20} /> }, { label: "Other", icon: <Banknote size={20} /> },
   ],
   transfer: [
-    { label: "Bank Transfer", icon: "🏦" }, { label: "UPI", icon: "📱" },
-    { label: "Cash", icon: "💵" }, { label: "Card", icon: "💳" },
+    { label: "Bank Transfer", icon: <Landmark size={20} /> }, { label: "UPI", icon: <Smartphone size={20} /> },
+    { label: "Cash", icon: <Banknote size={20} /> }, { label: "Card", icon: <CreditCard size={20} /> },
   ],
 };
 
 const TYPE_CONFIG = {
   expense: { label: "Expense", color: "border-rose-500 bg-rose-500/10 text-rose-400", dot: "bg-rose-500" },
   income: { label: "Income", color: "border-emerald-500 bg-emerald-500/10 text-emerald-400", dot: "bg-emerald-500" },
-  transfer: { label: "Transfer", color: "border-indigo-500 bg-indigo-500/10 text-indigo-400", dot: "bg-indigo-500" },
+  transfer: { label: "Transfer", color: "border-indigo-500 bg-indigo-500/10 text-slate-800", dot: "bg-indigo-500" },
 };
 
 const ACCOUNTS = ["Bank", "UPI", "Cash", "Credit Card", "Wallet"];
@@ -123,14 +127,14 @@ export default function EditTransaction() {
         <div className="card p-5 space-y-4">
           <p className="label mb-0">Amount</p>
           <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-semibold text-lg">₹</span>
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-semibold text-lg">₹</span>
             <input type="number" name="amount" placeholder="0" value={form.amount} onChange={handleChange}
               required min="1" className="input pl-9 text-xl font-bold h-14" />
           </div>
           <div className="flex flex-wrap gap-2">
             {QUICK_AMOUNTS.map(v => (
               <button key={v} type="button" onClick={() => addAmount(v)}
-                className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-colors"
+                className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-500 hover:text-slate-800 hover:bg-indigo-500/10 transition-colors"
                 style={{ background: "var(--surface-2)" }}>+{v.toLocaleString("en-IN")}</button>
             ))}
           </div>
@@ -142,9 +146,9 @@ export default function EditTransaction() {
           <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
             {cats.map(c => (
               <button key={c.label} type="button" onClick={() => setForm(f => ({ ...f, category: c.label }))}
-                className={`flex flex-col items-center gap-1.5 p-3 rounded-xl transition-all text-xs font-medium ${form.category === c.label ? "bg-indigo-600 text-white" : "text-slate-400 hover:bg-white/5"}`}
+                className={`flex flex-col items-center gap-1.5 p-3 rounded-xl transition-all text-xs font-medium ${form.category === c.label ? "bg-slate-900 text-white text-slate-900" : "text-slate-500 hover:bg-black/5"}`}
                 style={{ background: form.category === c.label ? undefined : "var(--surface-2)" }}>
-                <span className="text-xl">{c.icon}</span>
+                <span>{c.icon}</span>
                 <span className="truncate w-full text-center">{c.label}</span>
               </button>
             ))}
@@ -157,7 +161,7 @@ export default function EditTransaction() {
           <div className="flex flex-wrap gap-2">
             {ACCOUNTS.map(acc => (
               <button key={acc} type="button" onClick={() => setForm(f => ({ ...f, account: acc }))}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${form.account === acc ? "bg-indigo-600 text-white" : "text-slate-400 hover:text-slate-200"}`}
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${form.account === acc ? "bg-slate-900 text-white text-slate-900" : "text-slate-500 hover:text-slate-700"}`}
                 style={{ background: form.account === acc ? undefined : "var(--surface-2)" }}>{acc}</button>
             ))}
           </div>
@@ -185,19 +189,19 @@ export default function EditTransaction() {
                 <div className="relative">
                   <img src={URL.createObjectURL(newImage)} alt="New" className="w-full max-h-48 object-cover rounded-xl border" style={{ borderColor: "var(--border)" }} />
                   <button type="button" onClick={e => { e.preventDefault(); setNewImage(null); }}
-                    className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-red-600 transition-colors">
+                    className="absolute top-2 right-2 w-7 h-7 rounded-full bg-slate-50/60 flex items-center justify-center text-slate-900 hover:bg-red-600 transition-colors">
                     <X size={14} />
                   </button>
                 </div>
               ) : existingImage ? (
                 <div className="relative">
                   <img src={`${import.meta.env.VITE_BACKEND_URL}${existingImage}`} alt="Existing" className="w-full max-h-48 object-cover rounded-xl border" style={{ borderColor: "var(--border)" }} />
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity rounded-xl">
-                    <p className="text-sm text-white font-medium">Click to replace</p>
+                  <div className="absolute inset-0 flex items-center justify-center bg-slate-50/40 opacity-0 hover:opacity-100 transition-opacity rounded-xl">
+                    <p className="text-sm text-slate-900 font-medium">Click to replace</p>
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center gap-2 py-8 rounded-xl border-2 border-dashed text-slate-600 hover:text-slate-400 hover:border-indigo-500/50 transition-all"
+                <div className="flex flex-col items-center justify-center gap-2 py-8 rounded-xl border-2 border-dashed text-slate-600 hover:text-slate-500 hover:border-indigo-500/50 transition-all"
                   style={{ borderColor: "var(--border)", background: "var(--surface-2)" }}>
                   <Upload size={22} /><p className="text-sm">Click to upload receipt</p>
                 </div>

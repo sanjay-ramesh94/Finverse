@@ -16,12 +16,12 @@ export default function RequestOTP({ onNext }) {
   };
 
   return (
-    <div className="bg-zinc-800 p-6 rounded-lg text-white w-full max-w-md mx-auto">
+    <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-lg text-slate-900 w-full max-w-md mx-auto">
       <h2 className="text-2xl mb-4 font-bold">Two-Factor Authentication</h2>
       <input
         type="email"
         placeholder="Enter your email"
-        className="w-full p-2 rounded bg-zinc-700 mb-4"
+        className="w-full p-2 rounded bg-slate-50 border border-slate-200 mb-4"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />

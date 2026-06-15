@@ -62,8 +62,8 @@ export default function SWPCalculator() {
   }, [withdrawal, rate, duration]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-zinc-800 text-white px-4 py-10">
-      <div className="max-w-5xl mx-auto bg-zinc-800 p-6 rounded-xl shadow-2xl flex flex-col md:flex-row gap-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-50 to-white text-slate-900 px-4 py-10">
+      <div className="max-w-5xl mx-auto bg-white shadow-sm border border-slate-200 p-6 rounded-xl shadow-2xl flex flex-col md:flex-row gap-8">
         {/* LEFT SECTION */}
         <div className="flex-1 space-y-6">
           <h2 className="text-2xl font-bold text-yellow-400">SWP Calculator</h2>
@@ -73,7 +73,7 @@ export default function SWPCalculator() {
             <div className="flex justify-between items-center gap-4">
               <input
                 type="number"
-                className="w-24 px-2 py-1 text-right rounded bg-zinc-700 text-white"
+                className="w-24 px-2 py-1 text-right rounded bg-slate-50 border border-slate-200 text-slate-900"
                 value={withdrawal}
                 onChange={(e) => setWithdrawal(e.target.value)}
               />
@@ -94,7 +94,7 @@ export default function SWPCalculator() {
             <div className="flex justify-between items-center gap-4">
               <input
                 type="number"
-                className="w-24 px-2 py-1 text-right rounded bg-zinc-700 text-white"
+                className="w-24 px-2 py-1 text-right rounded bg-slate-50 border border-slate-200 text-slate-900"
                 value={rate}
                 onChange={(e) => setRate(e.target.value)}
               />
@@ -115,7 +115,7 @@ export default function SWPCalculator() {
             <div className="flex justify-between items-center gap-4">
               <input
                 type="number"
-                className="w-24 px-2 py-1 text-right rounded bg-zinc-700 text-white"
+                className="w-24 px-2 py-1 text-right rounded bg-slate-50 border border-slate-200 text-slate-900"
                 value={duration}
                 onChange={(e) => setDuration(e.target.value)}
               />

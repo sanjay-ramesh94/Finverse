@@ -46,11 +46,11 @@ export default function Investment() {
       {/* Total invested card */}
       <div className="card p-5 flex items-center gap-4">
         <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center">
-          <TrendingUp size={18} className="text-indigo-400" />
+          <TrendingUp size={18} className="text-slate-800" />
         </div>
         <div>
           <p className="text-xs text-slate-500 font-medium">Total Invested</p>
-          <p className="text-2xl font-bold mono text-indigo-400 mt-0.5">₹{totalInvested.toLocaleString("en-IN")}</p>
+          <p className="text-2xl font-bold mono text-slate-800 mt-0.5">₹{totalInvested.toLocaleString("en-IN")}</p>
         </div>
       </div>
 
@@ -78,7 +78,7 @@ export default function Investment() {
                 className="card p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="w-2 h-2 rounded-full" style={{ background: COLORS[i % COLORS.length] }} />
-                  <p className="text-sm font-semibold text-slate-200 capitalize">{tx.category}</p>
+                  <p className="text-sm font-semibold text-slate-700 capitalize">{tx.category}</p>
                 </div>
                 <p className="text-xs text-slate-500 mb-2">{tx.date}</p>
                 <p className="text-lg font-bold mono text-emerald-400">₹{tx.amount?.toLocaleString("en-IN")}</p>
@@ -89,7 +89,7 @@ export default function Investment() {
       ) : (
         <div className="card p-12 flex flex-col items-center text-center">
           <TrendingUp size={40} className="text-slate-700 mb-3" />
-          <p className="text-slate-400 font-medium">No investments found</p>
+          <p className="text-slate-500 font-medium">No investments found</p>
           <p className="text-sm text-slate-600 mt-1">Add a transaction with an investment category to see your portfolio here</p>
         </div>
       )}

@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowUpRight, ArrowDownRight, ArrowRight } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, ArrowRight, Coffee, Car, ShoppingBag, Gamepad2, Pill, Zap, Home, Briefcase, Laptop, LineChart, Coins, BarChart, CreditCard } from "lucide-react";
 import { motion } from "framer-motion";
 
 const CATEGORY_ICONS = {
-  food: "🍔", transport: "🚗", shopping: "🛍️", entertainment: "🎮",
-  health: "💊", utilities: "⚡", rent: "🏠", salary: "💼",
-  freelance: "💻", investment: "📈", gold: "🥇", mutual: "📊",
-  default: "💳"
+  food: Coffee, transport: Car, shopping: ShoppingBag, entertainment: Gamepad2,
+  health: Pill, utilities: Zap, rent: Home, salary: Briefcase,
+  freelance: Laptop, investment: LineChart, gold: Coins, mutual: BarChart,
+  default: CreditCard
 };
 
 const getCategoryIcon = (cat) => {
@@ -26,7 +26,7 @@ export default function RecentTransactions({ transactions }) {
       <div className="flex items-center justify-between mb-5">
         <p className="section-title mb-0">Recent Transactions</p>
         <button onClick={() => navigate("/history")}
-          className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors flex items-center gap-1">
+          className="text-xs text-slate-800 hover:text-slate-700 transition-colors flex items-center gap-1">
           View all <ArrowRight size={13} />
         </button>
       </div>
@@ -46,18 +46,18 @@ export default function RecentTransactions({ transactions }) {
               initial={{ opacity: 0, x: -8 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.05 }}
-              className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-white/5 transition-colors group"
+              className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-black/5 transition-colors group"
             >
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-base shrink-0"
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-500 shrink-0"
                 style={{ background: "var(--surface-2)" }}>
-                {getCategoryIcon(tx.category)}
+                {(() => { const Icon = getCategoryIcon(tx.category); return <Icon size={16} />; })()}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-slate-200 truncate">{tx.note || tx.category || "Transaction"}</p>
+                <p className="text-sm font-medium text-slate-700 truncate">{tx.note || tx.category || "Transaction"}</p>
                 <p className="text-xs text-slate-500">{tx.date} · {tx.category}</p>
               </div>
               <div className="text-right shrink-0">
-                <p className={`text-sm font-semibold mono ${tx.type === "income" ? "text-emerald-400" : tx.type === "expense" ? "text-rose-400" : "text-indigo-400"}`}>
+                <p className={`text-sm font-semibold mono ${tx.type === "income" ? "text-emerald-400" : tx.type === "expense" ? "text-rose-400" : "text-slate-800"}`}>
                   {tx.type === "income" ? "+" : tx.type === "expense" ? "−" : ""}₹{tx.amount?.toLocaleString("en-IN")}
                 </p>
                 {tx.type === "income"

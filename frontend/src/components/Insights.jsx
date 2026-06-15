@@ -5,7 +5,7 @@ import { TrendingUp, TrendingDown, PiggyBank } from "lucide-react";
 
 export default function Insights() {
   const { user } = useContext(UserContext);
-  const [data, setData] = useState({ topCategories: [], savingsPercent: 0, m2mGrowth: 0 });
+  const [data, setData] = useState({ savingsPercent: 0, m2mGrowth: 0 });
 
   const fmtMonth = (d) => {
     const dt = new Date(d);
@@ -26,14 +26,9 @@ export default function Insights() {
         const totalIncome = tx.filter(t => fmtMonth(t.date) === thisMonth && t.type === "income").reduce((a, b) => a + b.amount, 0);
         const totalExpense = txThis.reduce((a, b) => a + b.amount, 0);
         const lastExpense = txLast.reduce((a, b) => a + b.amount, 0);
-        const topCats = Object.entries(txThis.reduce((acc, t) => {
-          const key = t.category?.trim().toLowerCase();
-          if (key) acc[key] = (acc[key] || 0) + t.amount;
-          return acc;
-        }, {})).sort((a, b) => b[1] - a[1]).slice(0, 3);
         const savingsPercent = totalIncome > 0 ? ((totalIncome - totalExpense) / totalIncome) * 100 : 0;
         const m2mGrowth = lastExpense === 0 ? (totalExpense > 0 ? 100 : 0) : ((totalExpense - lastExpense) / lastExpense) * 100;
-        setData({ topCategories: topCats, savingsPercent: savingsPercent.toFixed(1), m2mGrowth: m2mGrowth.toFixed(1) });
+        setData({ savingsPercent: savingsPercent.toFixed(1), m2mGrowth: m2mGrowth.toFixed(1) });
       } catch { /* silently fail */ }
     })();
   }, [user]);
@@ -41,22 +36,7 @@ export default function Insights() {
   const isGood = Number(data.m2mGrowth) <= 0;
 
   return (
-    <div className="card p-5 grid grid-cols-1 sm:grid-cols-3 gap-4">
-      {/* Top spending */}
-      <div>
-        <p className="section-title">Top Spending</p>
-        <div className="space-y-1.5">
-          {data.topCategories.length === 0
-            ? <p className="text-sm text-slate-600">No data this month</p>
-            : data.topCategories.map(([cat, amt]) => (
-              <div key={cat} className="flex items-center justify-between text-sm">
-                <span className="text-slate-400 capitalize">{cat}</span>
-                <span className="text-slate-200 font-medium">₹{amt.toLocaleString("en-IN")}</span>
-              </div>
-            ))}
-        </div>
-      </div>
-
+    <div className="card p-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
       {/* Savings rate */}
       <div className="flex items-start gap-3">
         <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0 mt-0.5">
@@ -64,7 +44,7 @@ export default function Insights() {
         </div>
         <div>
           <p className="section-title">Savings Rate</p>
-          <p className="text-3xl font-bold text-slate-100 leading-none">{data.savingsPercent}<span className="text-base text-slate-500 ml-0.5">%</span></p>
+          <p className="text-3xl font-bold text-slate-900 leading-none">{data.savingsPercent}<span className="text-base text-slate-500 ml-0.5">%</span></p>
           <p className="text-xs text-slate-500 mt-1">This month</p>
         </div>
       </div>

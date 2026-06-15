@@ -1,9 +1,12 @@
 import { useState, useContext } from "react";
 import axios from "axios";
 import { UserContext } from "../context/UserContext";
+import { KeyRound, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function ChangePassword() {
   const { user } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -36,49 +39,67 @@ export default function ChangePassword() {
   };
 
   return (
-    <div className="bg-zinc-800 text-white rounded-lg p-6 shadow-lg max-w-md mx-auto">
-      <h2 className="text-xl font-semibold mb-4 text-yellow-400">🔑 Change Password</h2>
-
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm mb-1">Current Password</label>
-          <input
-            type="password"
-            className="w-full px-4 py-2 bg-zinc-700 text-white border border-zinc-600 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-            placeholder="Enter current password"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm mb-1">New Password</label>
-          <input
-            type="password"
-            className="w-full px-4 py-2 bg-zinc-700 text-white border border-zinc-600 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            placeholder="Enter new password"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm mb-1">Confirm New Password</label>
-          <input
-            type="password"
-            className="w-full px-4 py-2 bg-zinc-700 text-white border border-zinc-600 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Re-enter new password"
-          />
-        </div>
-
-        <button
-          onClick={handleChangePassword}
-          className="w-full bg-yellow-400 text-black font-semibold py-2 rounded hover:bg-yellow-500 transition"
-        >
-          Change Password
+    <div className="space-y-6 max-w-md mx-auto mt-6">
+      <div className="flex items-center gap-3">
+        <button onClick={() => navigate(-1)} className="btn-ghost w-9 h-9 p-0 flex items-center justify-center">
+          <ArrowLeft size={18} />
         </button>
+        <div>
+          <h1 className="page-title">Change Password</h1>
+          <p className="text-sm text-slate-500 mt-0.5">Secure your account</p>
+        </div>
+      </div>
+
+      <div className="card p-6">
+        <div className="flex items-center gap-3 mb-5">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: "var(--surface-2)" }}>
+            <KeyRound size={18} className="text-amber-500" />
+          </div>
+          <h2 className="text-lg font-semibold text-slate-900">Password Update</h2>
+        </div>
+
+        <div className="space-y-4">
+          <div className="form-group">
+            <label className="label">Current Password</label>
+            <input
+              type="password"
+              className="input h-11"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              placeholder="Enter current password"
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="label">New Password</label>
+            <input
+              type="password"
+              className="input h-11"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="Enter new password"
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="label">Confirm New Password</label>
+            <input
+              type="password"
+              className="input h-11"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Re-enter new password"
+            />
+          </div>
+
+          <button
+            onClick={handleChangePassword}
+            className="btn-primary w-full h-11 mt-2"
+            disabled={!currentPassword || !newPassword || !confirmPassword}
+          >
+            Change Password
+          </button>
+        </div>
       </div>
     </div>
   );

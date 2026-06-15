@@ -22,7 +22,7 @@ export default function DeleteAccountPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 bg-zinc-800 p-6 rounded-lg text-white shadow-lg">
+    <div className="max-w-md mx-auto mt-10 bg-white shadow-sm border border-slate-200 p-6 rounded-lg text-slate-900 shadow-lg">
       <h2 className="text-xl font-semibold mb-4 text-red-400">⚠️ Confirm Deletion</h2>
       <p className="text-sm mb-6">
         This action is <strong>permanent</strong>. All your goals, transactions, and data will be removed.
@@ -30,7 +30,7 @@ export default function DeleteAccountPage() {
 
       <button
         onClick={handleDelete}
-        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
+        className="w-full bg-red-600 hover:bg-red-700 text-slate-900 px-4 py-2 rounded"
       >
         🗑️ Delete My Account
       </button>

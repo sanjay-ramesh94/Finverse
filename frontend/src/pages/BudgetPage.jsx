@@ -76,7 +76,7 @@ export default function BudgetPage() {
             {/* Add form */}
             {adding && (
                 <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="card p-5 space-y-4">
-                    <p className="text-sm font-semibold text-slate-200">New Budget Limit</p>
+                    <p className="text-sm font-semibold text-slate-700">New Budget Limit</p>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <select value={newCat} onChange={e => setNewCat(e.target.value)} className="input sm:col-span-1">
                             {EXPENSE_CATS.filter(c => !budgets[c.toLowerCase()]).map(c => (
@@ -84,7 +84,7 @@ export default function BudgetPage() {
                             ))}
                         </select>
                         <div className="relative sm:col-span-1">
-                            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-medium">₹</span>
+                            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm font-medium">₹</span>
                             <input type="number" placeholder="Monthly limit" value={newLimit} onChange={e => setNewLimit(e.target.value)}
                                 className="input pl-8" min="1" />
                         </div>
@@ -99,7 +99,7 @@ export default function BudgetPage() {
             {entries.length === 0 && !adding ? (
                 <div className="card p-12 flex flex-col items-center text-center">
                     <Target size={40} className="text-slate-700 mb-3" />
-                    <p className="text-slate-400 font-medium">No budgets set yet</p>
+                    <p className="text-slate-500 font-medium">No budgets set yet</p>
                     <p className="text-sm text-slate-600 mt-1">Add a limit to track your spending per category</p>
                     <button onClick={() => setAdding(true)} className="btn-primary mt-5">Set First Budget</button>
                 </div>
@@ -115,7 +115,7 @@ export default function BudgetPage() {
                                 className="card p-5">
                                 <div className="flex items-center justify-between mb-3">
                                     <div>
-                                        <p className="text-sm font-semibold text-slate-200 capitalize">{cat}</p>
+                                        <p className="text-sm font-semibold text-slate-700 capitalize">{cat}</p>
                                         <p className="text-xs text-slate-500 mt-0.5">
                                             {fmt(spent)} spent of {fmt(limit)} limit
                                         </p>

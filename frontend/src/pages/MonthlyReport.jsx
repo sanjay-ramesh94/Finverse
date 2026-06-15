@@ -16,12 +16,12 @@ const CustomTooltip = ({ active, payload, label }) => {
     if (!active || !payload?.length) return null;
     return (
         <div className="card px-4 py-3 text-sm shadow-xl">
-            {label && <p className="text-slate-400 mb-2 font-medium">{label}</p>}
+            {label && <p className="text-slate-500 mb-2 font-medium">{label}</p>}
             {payload.map(p => (
                 <div key={p.name} className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full" style={{ background: p.color }} />
-                    <span className="text-slate-300 capitalize">{p.name}:</span>
-                    <span className="font-semibold text-slate-100">₹{Number(p.value).toLocaleString("en-IN")}</span>
+                    <span className="text-slate-600 capitalize">{p.name}:</span>
+                    <span className="font-semibold text-slate-900">₹{Number(p.value).toLocaleString("en-IN")}</span>
                 </div>
             ))}
         </div>
@@ -136,7 +136,7 @@ export default function MonthlyReport() {
                                 sub: prevExpense > 0 ? `${expenseChange > 0 ? "+" : ""}${expenseChange}% vs last month` : null,
                                 subColor: expenseChange > 0 ? "text-rose-400" : "text-emerald-400"
                             },
-                            { label: "Net Savings", value: fmt(savings), icon: Wallet, color: savings >= 0 ? "text-indigo-400" : "text-rose-400", bg: "bg-indigo-500/10" },
+                            { label: "Net Savings", value: fmt(savings), icon: Wallet, color: savings >= 0 ? "text-slate-800" : "text-rose-400", bg: "bg-indigo-500/10" },
                             { label: "Savings Rate", value: `${savingsRate}%`, icon: Target, color: "text-amber-400", bg: "bg-amber-500/10" },
                         ].map((c, i) => (
                             <motion.div key={c.label} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }}
@@ -203,7 +203,7 @@ export default function MonthlyReport() {
                                 <div key={tx._id} className="flex items-center gap-4 px-6 py-3.5 border-b hover:bg-white/[0.02] transition-colors"
                                     style={{ borderColor: "var(--border)" }}>
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-medium text-slate-200 truncate">{tx.note || "No note"}</p>
+                                        <p className="text-sm font-medium text-slate-700 truncate">{tx.note || "No note"}</p>
                                         <p className="text-xs text-slate-500 capitalize">{tx.date} · {tx.category}</p>
                                     </div>
                                     <span className={`text-sm font-semibold ${tx.type === "income" ? "text-emerald-400" : "text-rose-400"}`}>

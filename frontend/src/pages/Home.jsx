@@ -6,7 +6,6 @@ import SummaryCards from "../components/SummaryCards";
 import Charts from "../components/Charts";
 import RecentTransactions from "../components/RecentTransactions";
 import GoalsProgress from "../components/GoalsProgress";
-import Insights from "../components/Insights";
 import { Plus, Sparkles, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -81,7 +80,7 @@ export default function Home() {
         <div className="flex items-start justify-between">
           <div>
             <p className="text-sm text-slate-500 font-medium">{today}</p>
-            <h1 className="text-2xl font-bold text-slate-100 mt-0.5">
+            <h1 className="text-2xl font-bold text-slate-900 mt-0.5">
               {greeting}, {user?.username?.split(" ")[0]} 👋
             </h1>
           </div>
@@ -94,9 +93,9 @@ export default function Home() {
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
           className="card p-8 flex flex-col items-center text-center max-w-lg mx-auto">
           <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center mb-4">
-            <Sparkles size={28} className="text-indigo-400" />
+            <Sparkles size={28} className="text-slate-800" />
           </div>
-          <h2 className="text-xl font-bold text-slate-100 mb-2">Welcome to Finverse!</h2>
+          <h2 className="text-xl font-bold text-slate-900 mb-2">Welcome to Finverse!</h2>
           <p className="text-sm text-slate-500 mb-8 leading-relaxed max-w-sm">
             Your dashboard is ready. Follow these 3 steps to get started and take control of your money.
           </p>
@@ -109,12 +108,12 @@ export default function Home() {
               <Link key={i} to={item.path}
                 className="flex items-center gap-4 p-4 rounded-xl text-left transition-all hover:-translate-y-0.5 hover:border-white/15 group"
                 style={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}>
-                <span className="text-xs font-bold text-indigo-400 mono w-6 shrink-0">{item.step}</span>
+                <span className="text-xs font-bold text-slate-800 mono w-6 shrink-0">{item.step}</span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-slate-200">{item.label}</p>
+                  <p className="text-sm font-semibold text-slate-700">{item.label}</p>
                   <p className="text-xs text-slate-500 truncate">{item.sub}</p>
                 </div>
-                <ArrowRight size={15} className="text-slate-600 group-hover:text-indigo-400 transition-colors" />
+                <ArrowRight size={15} className="text-slate-600 group-hover:text-slate-800 transition-colors" />
               </Link>
             ))}
           </div>
@@ -132,7 +131,7 @@ export default function Home() {
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm text-slate-500 font-medium">{today}</p>
-          <h1 className="text-2xl font-bold text-slate-100 mt-0.5">
+          <h1 className="text-2xl font-bold text-slate-900 mt-0.5">
             {greeting}, {user?.username?.split(" ")[0]}
           </h1>
         </div>
@@ -142,13 +141,16 @@ export default function Home() {
         </Link>
       </div>
 
-      <Insights />
       <SummaryCards income={income} expense={expense} balance={balance} />
-      <Charts chartData={chartData} pieData={pieData} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <RecentTransactions transactions={transactions} />
-        <GoalsProgress goals={goals} />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <RecentTransactions transactions={transactions} />
+        </div>
+        <div className="space-y-6">
+          <Charts pieData={pieData} />
+          <GoalsProgress goals={goals} />
+        </div>
       </div>
     </motion.div>
   );

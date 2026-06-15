@@ -14,12 +14,12 @@ export default function WealthTransition() {
   }, [navigate]);
 
   return (
-    <div className="bg-black h-screen flex items-center justify-center">
+    <div className="bg-slate-50 h-screen flex items-center justify-center">
       <motion.div
         initial={{ y: "100%" }}
         animate={{ y: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className="text-white text-center"
+        className="text-slate-900 text-center"
       >
         <h1 className="text-4xl font-bold text-yellow-300 tracking-wide">
           Finverse Wealth

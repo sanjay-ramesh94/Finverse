@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 
 const TYPE_COLORS = {
-  investment: { bar: "bg-indigo-500", text: "text-indigo-400" },
+  investment: { bar: "bg-indigo-500", text: "text-slate-800" },
   "short-term": { bar: "bg-emerald-500", text: "text-emerald-400" },
   "long-term": { bar: "bg-amber-500", text: "text-amber-400" },
 };
@@ -16,7 +16,7 @@ export default function GoalsProgress({ goals }) {
       <div className="flex items-center justify-between mb-5">
         <p className="section-title mb-0">Goals</p>
         <button onClick={() => navigate("/goals")}
-          className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors flex items-center gap-1">
+          className="text-xs text-slate-800 hover:text-slate-700 transition-colors flex items-center gap-1">
           Manage <ChevronRight size={13} />
         </button>
       </div>
@@ -40,7 +40,7 @@ export default function GoalsProgress({ goals }) {
                 transition={{ delay: i * 0.07 }}>
                 <div className="flex items-center justify-between mb-2">
                   <div>
-                    <p className="text-sm font-medium text-slate-200">{goal.name}</p>
+                    <p className="text-sm font-medium text-slate-700">{goal.name}</p>
                     <p className="text-xs text-slate-500 capitalize mt-0.5">{goal.type?.replace("-", " ")}</p>
                   </div>
                   <div className="text-right">

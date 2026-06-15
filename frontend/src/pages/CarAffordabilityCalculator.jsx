@@ -88,8 +88,8 @@ export default function CarAffordabilityCalculator() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-zinc-800 text-white p-6">
-      <div className="max-w-6xl mx-auto bg-zinc-800 p-6 rounded-xl shadow-2xl grid md:grid-cols-2 gap-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-50 to-white text-slate-900 p-6">
+      <div className="max-w-6xl mx-auto bg-white shadow-sm border border-slate-200 p-6 rounded-xl shadow-2xl grid md:grid-cols-2 gap-8">
         {/* LEFT SIDE - Inputs */}
         <div className="space-y-6">
           <h2 className="text-2xl font-bold text-yellow-400">
@@ -102,7 +102,7 @@ export default function CarAffordabilityCalculator() {
               type="number"
               value={income}
               onChange={(e) => setIncome(Number(e.target.value))}
-              className="w-full mt-1 px-4 py-2 rounded bg-zinc-700 text-white"
+              className="w-full mt-1 px-4 py-2 rounded bg-slate-50 border border-slate-200 text-slate-900"
             />
           </div>
 
@@ -112,7 +112,7 @@ export default function CarAffordabilityCalculator() {
               type="number"
               value={budgetPercent}
               onChange={(e) => setBudgetPercent(Number(e.target.value))}
-              className="w-full mt-1 px-4 py-2 rounded bg-zinc-700 text-white"
+              className="w-full mt-1 px-4 py-2 rounded bg-slate-50 border border-slate-200 text-slate-900"
             />
           </div>
 
@@ -122,7 +122,7 @@ export default function CarAffordabilityCalculator() {
               type="number"
               value={carCost}
               onChange={(e) => setCarCost(Number(e.target.value))}
-              className="w-full mt-1 px-4 py-2 rounded bg-zinc-700 text-white"
+              className="w-full mt-1 px-4 py-2 rounded bg-slate-50 border border-slate-200 text-slate-900"
             />
           </div>
 
@@ -132,7 +132,7 @@ export default function CarAffordabilityCalculator() {
               type="number"
               value={downPayment}
               onChange={(e) => setDownPayment(Number(e.target.value))}
-              className="w-full mt-1 px-4 py-2 rounded bg-zinc-700 text-white"
+              className="w-full mt-1 px-4 py-2 rounded bg-slate-50 border border-slate-200 text-slate-900"
             />
           </div>
 
@@ -143,7 +143,7 @@ export default function CarAffordabilityCalculator() {
                 type="number"
                 value={loanTenure}
                 onChange={(e) => setLoanTenure(Number(e.target.value))}
-                className="w-full mt-1 px-4 py-2 rounded bg-zinc-700 text-white"
+                className="w-full mt-1 px-4 py-2 rounded bg-slate-50 border border-slate-200 text-slate-900"
               />
             </div>
             <div>
@@ -152,7 +152,7 @@ export default function CarAffordabilityCalculator() {
                 type="number"
                 value={interestRate}
                 onChange={(e) => setInterestRate(Number(e.target.value))}
-                className="w-full mt-1 px-4 py-2 rounded bg-zinc-700 text-white"
+                className="w-full mt-1 px-4 py-2 rounded bg-slate-50 border border-slate-200 text-slate-900"
               />
             </div>
           </div>
@@ -165,7 +165,7 @@ export default function CarAffordabilityCalculator() {
               type="number"
               value={lifespan}
               onChange={(e) => setLifespan(Number(e.target.value))}
-              className="w-full mt-1 px-4 py-2 rounded bg-zinc-700 text-white"
+              className="w-full mt-1 px-4 py-2 rounded bg-slate-50 border border-slate-200 text-slate-900"
               max={20}
             />
           </div>
@@ -177,7 +177,7 @@ export default function CarAffordabilityCalculator() {
                 type="number"
                 value={fuel}
                 onChange={(e) => setFuel(Number(e.target.value))}
-                className="w-full mt-1 px-4 py-2 rounded bg-zinc-700 text-white"
+                className="w-full mt-1 px-4 py-2 rounded bg-slate-50 border border-slate-200 text-slate-900"
               />
             </div>
 
@@ -187,7 +187,7 @@ export default function CarAffordabilityCalculator() {
                 type="number"
                 value={maintenance}
                 onChange={(e) => setMaintenance(Number(e.target.value))}
-                className="w-full mt-1 px-4 py-2 rounded bg-zinc-700 text-white"
+                className="w-full mt-1 px-4 py-2 rounded bg-slate-50 border border-slate-200 text-slate-900"
               />
             </div>
           </div>
@@ -198,7 +198,7 @@ export default function CarAffordabilityCalculator() {
               type="number"
               value={insurance}
               onChange={(e) => setInsurance(Number(e.target.value))}
-              className="w-full mt-1 px-4 py-2 rounded bg-zinc-700 text-white"
+              className="w-full mt-1 px-4 py-2 rounded bg-slate-50 border border-slate-200 text-slate-900"
             />
           </div>
         </div>

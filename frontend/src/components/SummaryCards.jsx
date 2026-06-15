@@ -9,7 +9,7 @@ export default function SummaryCards({ income, expense, balance }) {
       label: "Total Balance",
       value: fmt(balance),
       icon: Wallet,
-      color: "text-indigo-400",
+      color: "text-slate-800",
       iconBg: "bg-indigo-500/10",
       trend: balance >= 0 ? "positive" : "negative",
     },

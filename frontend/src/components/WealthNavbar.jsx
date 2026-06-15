@@ -18,7 +18,7 @@ export default function WealthNavbar() {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav className="bg-zinc-900 text-white px-6 py-3 shadow-md">
+    <nav className="bg-white text-slate-900 px-6 py-3 shadow-md">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         {/* Logo + Nav Links */}
         <div className="flex items-center space-x-4">
@@ -57,7 +57,7 @@ export default function WealthNavbar() {
 
         {/* Mobile Menu Toggle */}
         <button
-          className="md:hidden text-white text-2xl"
+          className="md:hidden text-slate-900 text-2xl"
           onClick={() => setMenuOpen(!menuOpen)}
         >
           {menuOpen ? <FaTimes /> : <FaBars />}
@@ -66,7 +66,7 @@ export default function WealthNavbar() {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <ul className="md:hidden mt-4 space-y-3 text-sm font-medium bg-zinc-800 px-4 py-4 rounded-lg shadow">
+        <ul className="md:hidden mt-4 space-y-3 text-sm font-medium bg-white shadow-sm border border-slate-200 px-4 py-4 rounded-lg shadow">
           {navLinks.map((link) => (
             <li key={link.path}>
               <span
@@ -90,7 +90,7 @@ export default function WealthNavbar() {
                 navigate("/dashboard"); // adjust as needed
                 setMenuOpen(false);
               }}
-              className="block text-yellow-400 hover:text-yellow-300 border-t border-zinc-600 pt-3"
+              className="block text-yellow-400 hover:text-yellow-300 border-t border-slate-200 pt-3"
             >
               ← Back to Finverse
             </span>

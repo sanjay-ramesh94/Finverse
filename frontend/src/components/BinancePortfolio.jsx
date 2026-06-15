@@ -21,7 +21,7 @@ const BinancePortfolio = () => {
   }, []);
 
   return (
-    <div className="text-white px-6 py-8">
+    <div className="text-slate-900 px-6 py-8">
       <h2 className="text-3xl font-bold mb-6">🪙 My Binance Portfolio</h2>
       {loading ? (
         <p>Loading portfolio...</p>

@@ -51,14 +51,14 @@ export default function Login() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        className="w-full max-w-sm"
+        className="w-full max-w-sm bg-white p-8 sm:p-10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100"
       >
         {/* Logo */}
         <div className="flex flex-col items-center mb-10">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center mb-4">
-            <Wallet size={22} className="text-white" />
+          <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center mb-4 shadow-sm">
+            <Wallet size={28} className="text-slate-800" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-100 tracking-tight">Welcome back</h1>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Welcome back</h1>
           <p className="text-sm text-slate-500 mt-1">Sign in to your Finverse account</p>
         </div>
 
@@ -102,14 +102,14 @@ export default function Login() {
                 className="input pl-10 pr-10"
               />
               <button type="button" onClick={() => setShowPw(!showPw)}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors">
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-600 transition-colors">
                 {showPw ? <EyeOff size={15} /> : <Eye size={15} />}
               </button>
             </div>
           </div>
 
           <div className="flex justify-end -mt-1">
-            <Link to="/forgot-password" className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+            <Link to="/forgot-password" className="text-xs text-slate-800 hover:text-slate-700 transition-colors">
               Forgot password?
             </Link>
           </div>
@@ -131,7 +131,7 @@ export default function Login() {
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
             onError={() => setError("Google sign-in failed.")}
-            theme="filled_black"
+            theme="outline"
             shape="rectangular"
             width="320"
           />
@@ -139,7 +139,7 @@ export default function Login() {
 
         <p className="text-center text-sm text-slate-500 mt-8">
           Don't have an account?{" "}
-          <Link to="/signup" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
+          <Link to="/signup" className="text-slate-800 hover:text-slate-700 font-medium transition-colors">
             Create account
           </Link>
         </p>

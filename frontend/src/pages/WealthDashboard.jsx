@@ -68,7 +68,7 @@ const WealthDashboard = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white text-slate-900">
       <WealthNavbar />
       <div className="max-w-7xl mx-auto px-4 py-8">
         {isMainPortfolio && (
@@ -80,7 +80,7 @@ const WealthDashboard = () => {
             <h2 className="text-2xl font-semibold mb-6">📈 Investment Overview</h2>
 
             {/* 📊 Pie Chart */}
-            <div className="bg-zinc-800 p-6 rounded-lg shadow-md mb-8">
+            <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-lg shadow-md mb-8">
               <h3 className="text-xl font-bold mb-4 text-center">Distribution</h3>
               <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
@@ -111,7 +111,7 @@ const WealthDashboard = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.8 }}
-              className="bg-zinc-800 p-6 rounded-lg shadow-md mb-8"
+              className="bg-white shadow-sm border border-slate-200 p-6 rounded-lg shadow-md mb-8"
             >
               <h3 className="text-xl font-bold mb-4">📌 Insights</h3>
               <ul className="space-y-3">
@@ -139,7 +139,7 @@ const WealthDashboard = () => {
               {Object.entries(investments).map(([key, value]) => (
                 <div
                   key={key}
-                  className="bg-zinc-800 p-4 rounded-lg shadow-md text-center"
+                  className="bg-white shadow-sm border border-slate-200 p-4 rounded-lg shadow-md text-center"
                 >
                   <p className="text-lg capitalize font-medium">{key}</p>
                   <p className="text-2xl font-bold text-green-400">

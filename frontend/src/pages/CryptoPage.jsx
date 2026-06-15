@@ -40,7 +40,7 @@ const Crypto = () => {
   }, []);
 
   return (
-    <div className="text-white px-4 py-6 min-h-screen bg-gradient-to-b from-black to-gray-900">
+    <div className="text-slate-900 px-4 py-6 min-h-screen bg-gradient-to-b from-slate-50 to-white">
       <h1 className="text-3xl font-bold mb-6">💰 Crypto Portfolio</h1>
 
       {loading ? (

@@ -84,7 +84,7 @@ export default function ReceiptScanner() {
   };
 
   return (
-    <div className="p-6 text-white">
+    <div className="p-6 text-slate-900">
       <h2 className="text-xl font-bold mb-4">📷 Receipt Scanner</h2>
 
       <input type="file" accept="image/*" onChange={handleImage} />
@@ -106,7 +106,7 @@ export default function ReceiptScanner() {
       {loading && <p className="mt-2 text-gray-400">🔍 Scanning...</p>}
 
       {text && (
-        <div className="mt-6 bg-zinc-800 p-4 rounded space-y-2">
+        <div className="mt-6 bg-white shadow-sm border border-slate-200 p-4 rounded space-y-2">
           <h3 className="font-semibold mb-2 text-yellow-400">📝 Extracted Transaction:</h3>
           <p><strong>Amount:</strong> ₹{parsedData.amount}</p>
           <p><strong>Date:</strong> {parsedData.date}</p>
@@ -115,7 +115,7 @@ export default function ReceiptScanner() {
 
           <button
             onClick={() => navigate("/add", { state: parsedData })}
-            className="mt-4 bg-green-500 px-4 py-2 rounded text-white font-bold"
+            className="mt-4 bg-green-500 px-4 py-2 rounded text-slate-900 font-bold"
           >
             ➕ Add to Transactions
           </button>

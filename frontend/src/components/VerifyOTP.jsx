@@ -16,12 +16,12 @@ export default function VerifyOTP({ email, onVerified }) {
   };
 
   return (
-    <div className="bg-zinc-800 p-6 rounded-lg text-white w-full max-w-md mx-auto">
+    <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-lg text-slate-900 w-full max-w-md mx-auto">
       <h2 className="text-xl mb-4 font-bold">Enter OTP sent to {email}</h2>
       <input
         type="text"
         placeholder="Enter 6-digit OTP"
-        className="w-full p-2 rounded bg-zinc-700 mb-4"
+        className="w-full p-2 rounded bg-slate-50 border border-slate-200 mb-4"
         value={otp}
         onChange={(e) => setOtp(e.target.value)}
       />

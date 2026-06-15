@@ -7,13 +7,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        'fv-bg': '#0F1117',
-        'fv-surface': '#1A1D27',
-        'fv-surface-2': '#22263A',
-        'fv-accent': '#6366F1',
-        'fv-income': '#10B981',
-        'fv-expense': '#F43F5E',
-        'fv-border': 'rgba(255,255,255,0.07)',
+        'fv-bg': '#F8FAFC',
+        'fv-surface': '#FFFFFF',
+        'fv-surface-2': '#F1F5F9',
+        'fv-accent': '#0F172A',
+        'fv-income': '#059669',
+        'fv-expense': '#E11D48',
+        'fv-border': '#E2E8F0',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

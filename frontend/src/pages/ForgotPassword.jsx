@@ -36,8 +36,8 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-900 text-white px-4">
-      <div className="bg-zinc-800 p-6 rounded shadow-lg w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-white text-slate-900 px-4">
+      <div className="bg-white shadow-sm border border-slate-200 p-6 rounded shadow-lg w-full max-w-md">
         <h2 className="text-xl font-bold mb-4 text-yellow-400">Forgot Password</h2>
 
         {step === 1 ? (
@@ -47,7 +47,7 @@ export default function ForgotPassword() {
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full mb-3 px-4 py-2 rounded bg-zinc-700 text-white"
+              className="w-full mb-3 px-4 py-2 rounded bg-slate-50 border border-slate-200 text-slate-900"
             />
             <button onClick={sendOtp} className="w-full bg-yellow-400 text-black py-2 rounded hover:bg-yellow-500">
               Send OTP
@@ -60,14 +60,14 @@ export default function ForgotPassword() {
               placeholder="Enter OTP"
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
-              className="w-full mb-3 px-4 py-2 rounded bg-zinc-700 text-white"
+              className="w-full mb-3 px-4 py-2 rounded bg-slate-50 border border-slate-200 text-slate-900"
             />
             <input
               type="password"
               placeholder="New Password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full mb-3 px-4 py-2 rounded bg-zinc-700 text-white"
+              className="w-full mb-3 px-4 py-2 rounded bg-slate-50 border border-slate-200 text-slate-900"
             />
             <button onClick={verifyAndReset} className="w-full bg-yellow-400 text-black py-2 rounded hover:bg-yellow-500">
               Reset Password

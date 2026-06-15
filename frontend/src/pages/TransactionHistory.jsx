@@ -3,13 +3,13 @@ import axios from "axios";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Pencil, Trash2, Search, SlidersHorizontal, Plus } from "lucide-react";
+import { Pencil, Trash2, Search, SlidersHorizontal, Plus, Coffee, Car, ShoppingBag, Gamepad2, Pill, Zap, Home, Briefcase, Laptop, LineChart, Coins, BarChart, CreditCard } from "lucide-react";
 
 const CATEGORY_ICONS = {
-  food: "🍔", transport: "🚗", shopping: "🛍️", entertainment: "🎮",
-  health: "💊", utilities: "⚡", rent: "🏠", salary: "💼",
-  freelance: "💻", investment: "📈", gold: "🥇", mutual: "📊",
-  default: "💳"
+  food: Coffee, transport: Car, shopping: ShoppingBag, entertainment: Gamepad2,
+  health: Pill, utilities: Zap, rent: Home, salary: Briefcase,
+  freelance: Laptop, investment: LineChart, gold: Coins, mutual: BarChart,
+  default: CreditCard
 };
 const getIcon = (cat) => {
   if (!cat) return CATEGORY_ICONS.default;
@@ -118,15 +118,15 @@ export default function TransactionHistory() {
                 >
                   {/* Icon + Category */}
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl flex items-center justify-center text-base shrink-0"
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-500 shrink-0"
                       style={{ background: "var(--surface-2)" }}>
-                      {getIcon(tx.category)}
+                      {(() => { const Icon = getIcon(tx.category); return <Icon size={16} />; })()}
                     </div>
                   </div>
 
                   {/* Description */}
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-slate-200 truncate">{tx.note || "No description"}</p>
+                    <p className="text-sm font-medium text-slate-700 truncate">{tx.note || "No description"}</p>
                     <p className="text-xs text-slate-500 capitalize">{tx.category} · {tx.account}</p>
                   </div>
 
@@ -145,7 +145,7 @@ export default function TransactionHistory() {
                   {/* Actions */}
                   <div className="flex items-center gap-2">
                     <button onClick={() => navigate(`/edit/${tx._id}`)}
-                      className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-indigo-400 hover:bg-indigo-500/10 transition-colors">
+                      className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-indigo-500/10 transition-colors">
                       <Pencil size={14} />
                     </button>
                     <button onClick={() => setDeleteId(tx._id)}
@@ -164,10 +164,10 @@ export default function TransactionHistory() {
       <AnimatePresence>
         {deleteId && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            className="fixed inset-0 bg-slate-50/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
               className="card max-w-sm w-full p-6">
-              <h3 className="text-lg font-semibold text-slate-100 mb-2">Delete transaction?</h3>
+              <h3 className="text-lg font-semibold text-slate-900 mb-2">Delete transaction?</h3>
               <p className="text-sm text-slate-500 mb-6">This action can't be undone.</p>
               <div className="flex gap-3">
                 <button onClick={() => setDeleteId(null)} className="btn-ghost flex-1">Cancel</button>
