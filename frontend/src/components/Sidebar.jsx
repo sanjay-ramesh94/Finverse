@@ -37,8 +37,8 @@ export default function Sidebar() {
 
             {/* Logo */}
             <div className="flex items-center gap-3 px-4 py-5 shrink-0">
-                <div className="w-8 h-8 rounded-xl bg-slate-900 text-white flex items-center justify-center shrink-0 shadow-lg shadow-slate-900/10">
-                    <Wallet size={16} className="text-slate-900" />
+                <div className="w-8 h-8 rounded-xl bg-indigo-500 text-white flex items-center justify-center shrink-0 shadow-lg shadow-indigo-500/20">
+                    <Wallet size={16} className="text-white" />
                 </div>
                 <span className="font-bold text-slate-900 text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
                     Finverse
@@ -79,7 +79,7 @@ export default function Sidebar() {
             <div className="px-2 pb-4 flex flex-col gap-1">
                 <div className="divider mx-1 mb-2" />
                 <div className="flex items-center gap-3 px-3 py-2.5">
-                    <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center shrink-0 text-xs font-bold text-slate-900 uppercase shadow-md shadow-slate-900/10">
+                    <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0 text-xs font-bold uppercase shadow-sm border border-indigo-200">
                         {user?.username?.charAt(0) || "U"}
                     </div>
                     <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 min-w-0">
