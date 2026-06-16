@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { LayoutDashboard, ArrowLeftRight, Target, PlusCircle, Settings } from "lucide-react";
 
 const tabs = [
@@ -13,8 +14,31 @@ export default function BottomNavbar() {
   const navigate = useNavigate();
   const isActive = (path) => location.pathname === path;
 
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // If scrolling down and scrolled past 50px, hide
+      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        setIsVisible(false);
+      } 
+      // If scrolling up, show
+      else if (currentScrollY < lastScrollY) {
+        setIsVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden"
+    <nav className={`fixed bottom-0 left-0 right-0 z-50 md:hidden pb-[env(safe-area-inset-bottom)] transition-transform duration-300 ease-in-out ${isVisible ? "translate-y-0" : "translate-y-full"}`}
       style={{ background: "var(--surface)", borderTop: "1px solid var(--border)" }}>
       <div className="flex items-center justify-around h-16 px-2">
         {/* Home */}

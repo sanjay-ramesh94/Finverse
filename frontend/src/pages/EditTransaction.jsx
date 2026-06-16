@@ -128,8 +128,8 @@ export default function EditTransaction() {
           <p className="label mb-0">Amount</p>
           <div className="relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-semibold text-lg">₹</span>
-            <input type="number" name="amount" placeholder="0" value={form.amount} onChange={handleChange}
-              required min="1" className="input pl-9 text-xl font-bold h-14" />
+            <input type="number" inputMode="decimal" name="amount" placeholder="0" value={form.amount} onChange={handleChange}
+              required min="1" className="input pl-9 text-4xl font-bold h-16 tracking-tight mono" />
           </div>
           <div className="flex flex-wrap gap-2">
             {QUICK_AMOUNTS.map(v => (

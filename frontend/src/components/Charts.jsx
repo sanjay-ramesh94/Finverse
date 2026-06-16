@@ -23,7 +23,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 export default function Charts({ pieData }) {
   return (
-    <div className="card p-6 flex flex-col h-full">
+    <div className="card p-6 flex flex-col h-full rounded-[2rem] shadow-lg shadow-slate-200/40 border border-slate-100 bg-white">
         <div className="mb-5">
           <p className="section-title">Spending</p>
           <p className="text-xs text-slate-500">Expense breakdown by category</p>
@@ -32,8 +32,8 @@ export default function Charts({ pieData }) {
           <>
             <ResponsiveContainer width="100%" height={160}>
               <PieChart>
-                <Pie data={pieData} cx="50%" cy="50%" innerRadius={45} outerRadius={75}
-                  paddingAngle={3} dataKey="value">
+                <Pie data={pieData} cx="50%" cy="50%" innerRadius={55} outerRadius={85}
+                  paddingAngle={5} dataKey="value" stroke="none">
                   {pieData.map((_, idx) => (
                     <Cell key={idx} fill={COLORS[idx % COLORS.length]} stroke="transparent" />
                   ))}

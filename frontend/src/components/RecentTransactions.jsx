@@ -22,7 +22,7 @@ export default function RecentTransactions({ transactions }) {
     .slice(0, 6);
 
   return (
-    <div className="card p-6">
+    <div className="card p-6 rounded-[2rem] shadow-lg shadow-slate-200/40 border border-slate-100 bg-white">
       <div className="flex items-center justify-between mb-5">
         <p className="section-title mb-0">Recent Transactions</p>
         <button onClick={() => navigate("/history")}
@@ -46,10 +46,10 @@ export default function RecentTransactions({ transactions }) {
               initial={{ opacity: 0, x: -8 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.05 }}
-              className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-black/5 transition-colors group"
+              className="flex items-center gap-4 px-4 py-3.5 mb-2 bg-slate-50/50 hover:bg-slate-50 border border-slate-100 rounded-[1.25rem] transition-all group"
             >
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-500 shrink-0"
-                style={{ background: "var(--surface-2)" }}>
+              <div className="w-11 h-11 rounded-[1rem] flex items-center justify-center text-slate-600 shrink-0 bg-white shadow-sm border border-slate-100"
+                >
                 {(() => { const Icon = getCategoryIcon(tx.category); return <Icon size={16} />; })()}
               </div>
               <div className="flex-1 min-w-0">

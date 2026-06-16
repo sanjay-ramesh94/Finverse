@@ -152,7 +152,7 @@ export default function AddTransaction() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="card p-10 flex flex-col items-center text-center max-w-sm w-full"
+              className="card p-10 flex flex-col items-center text-center max-w-sm w-full rounded-[2.5rem] shadow-2xl border border-slate-100 bg-white"
             >
               <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200, delay: 0.1 }}>
                 <CheckCircle2 size={56} className="text-emerald-400 mb-4" />
@@ -176,12 +176,12 @@ export default function AddTransaction() {
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* ── Step 1: Type ── */}
-        <div className="card p-5">
+        <div className="card p-6 rounded-[2rem] shadow-lg shadow-slate-200/40 border border-slate-100 bg-white">
           <p className="label mb-3">Transaction Type</p>
           <div className="grid grid-cols-3 gap-3">
             {Object.entries(TYPE_CONFIG).map(([key, cfg]) => (
               <button key={key} type="button" onClick={() => { setType(key); setForm(f => ({ ...f, category: "" })); }}
-                className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all font-medium text-sm ${type === key ? cfg.color : "border-transparent hover:border-white/10 text-slate-500"
+                className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all font-medium text-sm ${type === key ? cfg.color : "border-transparent hover:border-white/10 text-slate-500"
                   }`}
                 style={{ background: type === key ? undefined : "var(--surface-2)" }}
               >
@@ -193,12 +193,13 @@ export default function AddTransaction() {
         </div>
 
         {/* ── Step 2: Amount ── */}
-        <div className="card p-5 space-y-4">
+        <div className="card p-6 space-y-4 rounded-[2rem] shadow-lg shadow-slate-200/40 border border-slate-100 bg-white">
           <p className="label mb-0">Amount</p>
           <div className="relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-semibold text-lg">₹</span>
             <input
               type="number"
+              inputMode="decimal"
               name="amount"
               placeholder="0"
               value={form.amount}
@@ -228,13 +229,13 @@ export default function AddTransaction() {
         </div>
 
         {/* ── Step 3: Category ── */}
-        <div className="card p-5">
+        <div className="card p-6 rounded-[2rem] shadow-lg shadow-slate-200/40 border border-slate-100 bg-white">
           <p className="label mb-3">Category</p>
           <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
             {cats.map(c => (
               <button key={c.label} type="button" onClick={() => setCategory(c.label)}
-                className={`flex flex-col items-center gap-1.5 p-3 rounded-xl transition-all text-xs font-medium ${form.category === c.label
-                  ? "bg-slate-900 text-white text-slate-900"
+                className={`flex flex-col items-center gap-1.5 p-3 rounded-2xl transition-all text-xs font-medium ${form.category === c.label
+                  ? "bg-slate-900 text-white shadow-md shadow-slate-900/20"
                   : "text-slate-500 hover:bg-black/5"
                   }`}
                 style={{ background: form.category === c.label ? undefined : "var(--surface-2)" }}
@@ -247,13 +248,13 @@ export default function AddTransaction() {
         </div>
 
         {/* ── Step 4: Account ── */}
-        <div className="card p-5">
+        <div className="card p-6 rounded-[2rem] shadow-lg shadow-slate-200/40 border border-slate-100 bg-white">
           <p className="label mb-3">Payment Method</p>
           <div className="flex flex-wrap gap-2">
             {ACCOUNTS.map(acc => (
               <button key={acc} type="button" onClick={() => setAccount(acc)}
                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${form.account === acc
-                  ? "bg-slate-900 text-white text-slate-900"
+                  ? "bg-slate-900 text-white shadow-md shadow-slate-900/20"
                   : "text-slate-500 hover:text-slate-700"
                   }`}
                 style={{ background: form.account === acc ? undefined : "var(--surface-2)" }}
@@ -265,7 +266,7 @@ export default function AddTransaction() {
         </div>
 
         {/* ── Step 5: Details ── */}
-        <div className="card p-5 space-y-4">
+        <div className="card p-6 space-y-4 rounded-[2rem] shadow-lg shadow-slate-200/40 border border-slate-100 bg-white">
           <p className="label mb-0">Details</p>
           <div className="form-group">
             <label className="label">Date</label>
